@@ -8,7 +8,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <AuthProvider>
-        <App />
+          <App />
       </AuthProvider>
     </StyledEngineProvider>
   </React.StrictMode>

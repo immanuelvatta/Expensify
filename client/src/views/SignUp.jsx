@@ -115,10 +115,10 @@ const SignUp = () => {
           >
             <div>
               <Typography component="h1" fontSize="xl2" fontWeight="lg">
-                Sign in to your account
+                Please create an account
               </Typography>
               <Typography level="body-sm" sx={{ my: 1, mb: 3 }}>
-                Welcome back
+                Nice to meet you!
               </Typography>
             </div>
             <form
@@ -156,15 +156,12 @@ const SignUp = () => {
                   alignItems: "center",
                 }}
               >
-                <RouterLink fontSize="sm" href="#replace-with-a-link" fontWeight="lg">
-                  Forgot your password?
-                </RouterLink>
                 <RouterLink fontSize="sm" to={"/login"} fontWeight="lg">
                   Already have an account?
                 </RouterLink>
               </Box>
               <Button type="submit" fullWidth>
-                Sign in
+                Sign up with google
               </Button>
               <Button
               variant="outlined"
