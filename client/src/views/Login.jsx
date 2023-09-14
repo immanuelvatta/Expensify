@@ -16,7 +16,7 @@ import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import { GoogleIcon } from "../components/GoogleIcon";
 
 
-function ColorSchemeToggle({ onClick, ...props }) {
+function ColorSchemeToggle({...props }) {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = useState(false);
 
@@ -36,13 +36,12 @@ function ColorSchemeToggle({ onClick, ...props }) {
       color="neutral"
       aria-label="toggle light/dark mode"
       {...props}
-      onClick={(event) => {
+      onClick={() => {
         if (mode === "light") {
           setMode("dark");
         } else {
           setMode("light");
         }
-        onClick?.(event);
       }}
     >
       {mode === "light" ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
@@ -124,7 +123,7 @@ const Login = () => {
                 />
               }
             >
-              BWIV
+              BWIV -Expensify
             </Typography>
             <ColorSchemeToggle />
           </Box>

@@ -1,5 +1,4 @@
 import { Navigate, BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
 import Login from "./views/Login";
 
 function App() {
