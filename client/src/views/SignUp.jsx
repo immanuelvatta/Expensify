@@ -1,4 +1,3 @@
-import { useState, useContext} from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import CssBaseline from "@mui/joy/CssBaseline";
@@ -6,46 +5,17 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
-import { useNavigate } from "react-router-dom";
-import Link from "@mui/joy/Link";
+import {Link as RouterLink } from "react-router-dom";
 import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
 import { GoogleIcon } from "../components/GoogleIcon";
 import ColorSchemeToggle from "../components/ColorSchemeToggle";
 
-import {auth} from "../firebase/firebase";
-import { AuthContext } from "../context/authContext";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const { currentUser, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
 
-  const handleSubmit = (e) => {
-    setError(null); // Clear previous errors
-    setEmailError(false);
-  
-    if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
-      setEmailError(true);
-      return;
-    }
-  
-    auth.signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        setCurrentUser(userCredential.user.uid);
-        localStorage.setItem("uid", userCredential.user.uid);
-        setCurrentUserEmail(userCredential.user.email);
-        localStorage.setItem("email", userCredential.user.email);
-        navigate("/admin");
-      })
-      .catch((err) => {
-        setError(err.message);
-        console.error(err);
-      });
-  };
+const SignUp = () => {
+
+//   const navigate = useNavigate();
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -152,28 +122,32 @@ const Login = () => {
               </Typography>
             </div>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(e);
+              onSubmit={(event) => {
+                event.preventDefault();
+                const formElements = event.currentTarget.elements;
+                const data = {
+                  email: formElements.email.value,
+                  password: formElements.password.value,
+                  persistent: formElements.persistent.checked,
+                };
+                alert(JSON.stringify(data, null, 2));
               }}
             >
               <FormControl required>
+                <FormLabel>User Name:</FormLabel>
+                <Input type="text" name="userName" />
+              </FormControl>
+              <FormControl required>
                 <FormLabel>Email</FormLabel>
-                <Input
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <Input type="email" name="email" />
               </FormControl>
               <FormControl required>
                 <FormLabel>Password</FormLabel>
-                <Input
-                  type="password"
-                  name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <Input type="password" name="password" />
+              </FormControl>
+              <FormControl required>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input type="password" name="confirmPassword" />
               </FormControl>
               <Box
                 sx={{
@@ -182,24 +156,24 @@ const Login = () => {
                   alignItems: "center",
                 }}
               >
-                <Link fontSize="sm" href="#replace-with-a-link" fontWeight="lg">
+                <RouterLink fontSize="sm" href="#replace-with-a-link" fontWeight="lg">
                   Forgot your password?
-                </Link>
-                <Link fontSize="sm" href="/signup" fontWeight="lg">
-                  Don't have an Account?
-                </Link>
+                </RouterLink>
+                <RouterLink fontSize="sm" to={"/login"} fontWeight="lg">
+                  Already have an account?
+                </RouterLink>
               </Box>
               <Button type="submit" fullWidth>
                 Sign in
               </Button>
               <Button
-                variant="outlined"
-                color="neutral"
-                fullWidth
-                startDecorator={<GoogleIcon />}
-              >
-                Sign in with Google
-              </Button>
+              variant="outlined"
+              color="neutral"
+              fullWidth
+              startDecorator={<GoogleIcon />}
+            >
+              Sign in with Google
+            </Button >
             </form>
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
@@ -235,4 +209,4 @@ const Login = () => {
     </CssVarsProvider>
   );
 };
-export default Login;
+export default SignUp;
