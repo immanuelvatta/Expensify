@@ -1,59 +1,21 @@
-import { useEffect, useState } from "react";
-import { CssVarsProvider, useColorScheme } from "@mui/joy/styles";
+import { CssVarsProvider } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-import Checkbox from "@mui/joy/Checkbox";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
-import IconButton from "@mui/joy/IconButton";
+
 import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import { GoogleIcon } from "../components/GoogleIcon";
+import ColorSchemeToggle from "../components/ColorSchemeToggle";
 
 
-function ColorSchemeToggle({...props }) {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return <IconButton size="sm" variant="plain" color="neutral" disabled />;
-  }
-
-  return (
-    <IconButton
-      id="toggle-mode"
-      size="sm"
-      variant="plain"
-      color="neutral"
-      aria-label="toggle light/dark mode"
-      {...props}
-      onClick={() => {
-        if (mode === "light") {
-          setMode("dark");
-        } else {
-          setMode("light");
-        }
-      }}
-    >
-      {mode === "light" ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-    </IconButton>
-  );
-}
-
-// ColorSchemeToggle.propTypes = {
-//   onClick: PropTypes.func, // Specify the prop type
-// };
 
 const Login = () => {
+
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -185,13 +147,11 @@ const Login = () => {
                   alignItems: "center",
                 }}
               >
-                <Checkbox
-                  size="sm"
-                  label="Remember me"
-                  name="persistent"
-                />
                 <Link fontSize="sm" href="#replace-with-a-link" fontWeight="lg">
                   Forgot your password?
+                </Link>
+                <Link fontSize="sm" href="/signup" fontWeight="lg">
+                  Don't have an Account?
                 </Link>
               </Box>
               <Button type="submit" fullWidth>
