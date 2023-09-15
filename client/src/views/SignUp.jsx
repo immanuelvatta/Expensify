@@ -1,3 +1,4 @@
+import { useState, useContext } from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import CssBaseline from "@mui/joy/CssBaseline";
@@ -5,17 +6,55 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
-import {Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
 import { GoogleIcon } from "../components/GoogleIcon";
 import ColorSchemeToggle from "../components/ColorSchemeToggle";
-
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebase"
+import { AuthContext } from "../context/authContext";
 
 const SignUp = () => {
+  const [emailError, setEmailError] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword , setConfirmPassword] = useState("");
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const { currentUser, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
+  
+  const navigate = useNavigate("");
 
-//   const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setEmailError(false)
+
+    if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      setEmailError(true)
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordsMatch(false);
+      return;
+    }
+    setPasswordsMatch(true);
+
+    try{
+      const newUser = await createUserWithEmailAndPassword(auth, email, password);
+
+      setCurrentUser(newUser.user.uid);
+      localStorage.setItem("uid", newUser.user.uid);
+      setCurrentUserEmail(newUser.user.email);
+      localStorage.setItem("email", newUser.user.email);
+      console.log(newUser)
+      navigate("/home");
+    }catch (err){
+      console.err("Registration Error: ", err);
+    }
+  }
+  
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -122,32 +161,47 @@ const SignUp = () => {
               </Typography>
             </div>
             <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                const formElements = event.currentTarget.elements;
-                const data = {
-                  email: formElements.email.value,
-                  password: formElements.password.value,
-                  persistent: formElements.persistent.checked,
-                };
-                alert(JSON.stringify(data, null, 2));
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
               }}
             >
               <FormControl required>
                 <FormLabel>User Name:</FormLabel>
-                <Input type="text" name="userName" />
+                <Input 
+                type="text" 
+                name="userName"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                />
               </FormControl>
               <FormControl required>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" name="email" />
+                <Input
+                type="email"
+                name="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                />
               </FormControl>
               <FormControl required>
                 <FormLabel>Password</FormLabel>
-                <Input type="password" name="password" />
+                <Input 
+                type="password" 
+                name="password" 
+                value={password}
+                onchange={(e) => setPassword(e.target.value)}
+                />
               </FormControl>
               <FormControl required>
                 <FormLabel>Confirm Password</FormLabel>
-                <Input type="password" name="confirmPassword" />
+                <Input 
+                type="password" 
+                name="confirmPassword" 
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                errors={errors}
+                />
               </FormControl>
               <Box
                 sx={{
@@ -164,13 +218,13 @@ const SignUp = () => {
                 Sign up with google
               </Button>
               <Button
-              variant="outlined"
-              color="neutral"
-              fullWidth
-              startDecorator={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button >
+                variant="outlined"
+                color="neutral"
+                fullWidth
+                startDecorator={<GoogleIcon />}
+              >
+                Sign in with Google
+              </Button>
             </form>
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
@@ -196,10 +250,10 @@ const SignUp = () => {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundImage:
-            "url(https://images.pexels.com/photos/4386335/pexels-photo-4386335.jpeg?auto=compress&cs=tinysrgb&w=1000)",
+            "url(https://images.pexels.com/photos/4386476/pexels-photo-4386476.jpeg?auto=compress&cs=tinysrgb&w=1000)",
           [theme.getColorSchemeSelector("dark")]: {
             backgroundImage:
-              "url(https://images.pexels.com/photos/7063765/pexels-photo-7063765.jpeg?auto=compress&cs=tinysrgb&w=1000)",
+              "url(https://images.pexels.com/photos/210990/pexels-photo-210990.jpeg?auto=compress&cs=tinysrgb&w=1000)",
           },
         })}
       />
