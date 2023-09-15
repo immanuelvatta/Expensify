@@ -43,7 +43,6 @@ const SignUp = () => {
 
     try{
       const newUser = await createUserWithEmailAndPassword(auth, email, password);
-
       setCurrentUser(newUser.user.uid);
       localStorage.setItem("uid", newUser.user.uid);
       setCurrentUserEmail(newUser.user.email);
