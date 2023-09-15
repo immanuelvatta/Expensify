@@ -1,8 +1,14 @@
 package com.bwiv.expensify.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,23 +26,25 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "events")
-public class Event {
-
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Event implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false )
     private User user;
 
     private String eventName;
-
+    
     @Temporal(TemporalType.DATE)
     private Date eventDate;
-
+    
     private String description;
-
+    
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
@@ -44,6 +52,11 @@ public class Event {
     private Date updatedAt;
 
     public Event() {
+    }
+
+    @JsonProperty
+    public Long getUserId(){
+        return user == null ? null : user.getId();
     }
 
     public Long getId() {
@@ -101,7 +114,7 @@ public class Event {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-    
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();

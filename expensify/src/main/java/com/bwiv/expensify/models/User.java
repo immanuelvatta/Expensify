@@ -1,9 +1,15 @@
 package com.bwiv.expensify.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +24,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,14 +33,16 @@ public class User {
     private String uid;
     private String userName;
     private String email;
-
+    
     // This will not allow the createdAt column to be updated after creation
+    @JsonIgnore
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Event> events;
 
@@ -47,7 +56,6 @@ public class User {
     public void setEvents(List<Event> events) {
         this.events = events;
     }
-
 
     public Long getId() {
         return this.id;
@@ -96,7 +104,6 @@ public class User {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-    
 
     @PrePersist
     protected void onCreate() {
