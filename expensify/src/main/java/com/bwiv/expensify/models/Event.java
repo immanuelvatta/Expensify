@@ -1,7 +1,6 @@
 package com.bwiv.expensify.models;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,43 +10,41 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "events")
+public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String uid;
-    private String userName;
-    private String email;
 
-    // This will not allow the createdAt column to be updated after creation
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
+
+    private String eventName;
+
+    @Temporal(TemporalType.DATE)
+    private Date eventDate;
+
+    private String description;
+
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Event> events;
-
-    public User() {
+    public Event() {
     }
-
-    public List<Event> getEvents() {
-        return this.events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
 
     public Long getId() {
         return this.id;
@@ -57,28 +54,36 @@ public class User {
         this.id = id;
     }
 
-    public String getUid() {
-        return this.uid;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getUserName() {
-        return this.userName;
+    public String getEventName() {
+        return this.eventName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
-    public String getEmail() {
-        return this.email;
+    public Date getEventDate() {
+        return this.eventDate;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreatedAt() {
@@ -97,7 +102,6 @@ public class User {
         this.updatedAt = updatedAt;
     }
     
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();
@@ -107,5 +111,4 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
-
 }
