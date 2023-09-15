@@ -8,14 +8,21 @@ import org.springframework.stereotype.Service;
 import com.bwiv.expensify.models.Event;
 import com.bwiv.expensify.repositories.EventRepository;
 
+import jakarta.validation.Valid;
+
 @Service
 public class EventService {
 
-
-   @Autowired
-   EventRepository eventRepository;
+    @Autowired
+    EventRepository eventRepository;
     // returns all the events
+
     public List<Event> getEvents() {
         return eventRepository.findAll();
     }
+
+    public Event createEvent(Event event) {
+        return eventRepository.save(event);
+    }
+
 }
