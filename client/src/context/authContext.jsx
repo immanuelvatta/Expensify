@@ -7,6 +7,9 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(() => {
         return localStorage.getItem("uid") || null
     });
+    const [currentUserId, setCurrentUserId] = useState(() => {
+        return localStorage.getItem("id") || null
+    });
     const [currentUserEmail, setCurrentUserEmail] = useState(() => {
         return localStorage.getItem("email") || null
     });
@@ -17,6 +20,7 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider
             value={{
                 currentUser, setCurrentUser,
+                currentUserId, setCurrentUserId,
                 currentUserEmail, setCurrentUserEmail
             }}
         >

@@ -1,22 +1,22 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState, useContext, useEffect } from "react";
-import { CssVarsProvider } from "@mui/joy/styles";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import CssBaseline from "@mui/joy/CssBaseline";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
-import { useNavigate } from "react-router-dom";
-import Link from "@mui/joy/Link";
+import GlobalStyles from "@mui/joy/GlobalStyles";
 import Input from "@mui/joy/Input";
+import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
-import { GoogleIcon } from "../components/GoogleIcon";
-import ColorSchemeToggle from "../components/ColorSchemeToggle";
+import { CssVarsProvider } from "@mui/joy/styles";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
-import { auth } from "../firebase/firebase";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ColorSchemeToggle from "../components/ColorSchemeToggle";
+import { GoogleIcon } from "../components/GoogleIcon";
+import LogoSVG from "../assets/Logo";
 import { AuthContext } from "../context/authContext";
+import { auth } from "../firebase/firebase";
 
 const Login = () => {
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -122,16 +122,17 @@ const Login = () => {
                     sx={{
                       width: 24,
                       height: 24,
-                      background: (theme) =>
-                        `linear-gradient(45deg, ${theme.vars.palette.primary.solidBg}, ${theme.vars.palette.primary.solidBg} 30%, ${theme.vars.palette.primary.softBg})`,
-                      borderRadius: "50%",
-                      boxShadow: (theme) => theme.shadow.md,
-                      "--joy-shadowChannel": (theme) =>
-                        theme.vars.palette.primary.mainChannel,
+                      // background: (theme) =>
+                      //   `linear-gradient(45deg, ${theme.vars.palette.primary.solidBg}, ${theme.vars.palette.primary.solidBg} 30%, ${theme.vars.palette.primary.softBg})`,
+                      // borderRadius: "50%",
+                      // boxShadow: (theme) => theme.shadow.md,
+                      // "--joy-shadowChannel": (theme) =>
+                      //   theme.vars.palette.primary.mainChannel,
                     }}
-                  />
+                  ></Box>
                 }
               >
+                <LogoSVG width={40} height={40} color={"darkgray"} sx={{ m: 1 }} />
                 BWIV -Expensify
               </Typography>
               <ColorSchemeToggle />
@@ -159,10 +160,13 @@ const Login = () => {
                 },
               }}
             >
-              <div>
+              <div >
+                  <Box style={{display:"flex", alignContent: "center"}}>
                 <Typography component="h1" fontSize="xl2" fontWeight="lg">
+                    <LogoSVG width={50} height={50} color={"darkgray"} sx={{ m: 1 }} />
                   Sign in to your account
                 </Typography>
+                  </Box>
                 <Typography level="body-sm" sx={{ my: 1, mb: 3 }}>
                   Welcome back
                 </Typography>

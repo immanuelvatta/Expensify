@@ -54,6 +54,8 @@ public class Event implements Serializable {
     public Event() {
     }
 
+    
+
     @JsonProperty
     public Long getUserId(){
         return user == null ? null : user.getId();
