@@ -14,6 +14,8 @@ import ColorSchemeToggle from "../components/ColorSchemeToggle";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase"
 import { AuthContext } from "../context/authContext";
+import LogoSVG from "../assets/Logo";
+import { createUser } from "../../services/userService";
 
 const SignUp = () => {
   const [emailError, setEmailError] = useState(false);
@@ -48,9 +50,18 @@ const SignUp = () => {
       setCurrentUserEmail(newUser.user.email);
       localStorage.setItem("email", newUser.user.email);
       console.log(newUser)
-      navigate("/home");
-    }catch (err){
-      console.err("Registration Error: ", err);
+      try{
+        const formData = new FormData();
+        formData.append("uid", newUser.user.uid);
+        formData.append("userName", userName);
+        formData.append("email", email);
+        createUser(formData);
+        navigate("/home");
+      } catch (err) {
+        console.log("Failed to send it to the db", err);
+      }
+    }catch (error){
+      console.err("Registration Error: ", error);
     }
   }
   
@@ -123,7 +134,7 @@ const SignUp = () => {
                   }}
                 />
               }
-            >
+            ><LogoSVG width={40} height={40} color={"darkgray"} sx={{ m: 1 }} />
               BWIV -Expensify
             </Typography>
             <ColorSchemeToggle />
@@ -189,7 +200,7 @@ const SignUp = () => {
                 type="password" 
                 name="password" 
                 value={password}
-                onchange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
               <FormControl required>
@@ -199,7 +210,6 @@ const SignUp = () => {
                 name="confirmPassword" 
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                errors={errors}
                 />
               </FormControl>
               <Box
