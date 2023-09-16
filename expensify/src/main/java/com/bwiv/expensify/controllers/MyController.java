@@ -54,7 +54,11 @@ public class MyController {
     }
     
     @PostMapping("/api/events")
-    public Event create(@RequestParam String eventName, @RequestParam String description, @RequestParam  String eventDate, @RequestParam Long userId) {
+    public Event create(
+        @RequestParam String eventName, 
+        @RequestParam String description, 
+        @RequestParam  String eventDate, 
+        @RequestParam Long userId) {
         User user = userService.getUserById(userId);
         Event event = new Event();
         event.setEventName(eventName);
@@ -70,5 +74,17 @@ public class MyController {
         event.setUser(user);
         
         return eventService.createEvent(event);
+    }
+
+    @PostMapping("/api/users")
+    public User createUser(
+        @RequestParam String uid, 
+        @RequestParam String userName, 
+        @RequestParam  String email) {
+        User user = new User();
+        user.setUid(uid);
+        user.setUserName(userName);
+        user.setEmail(email);
+        return userService.createUser(user);
     }
 }
