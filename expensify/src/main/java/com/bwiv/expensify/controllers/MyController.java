@@ -1,10 +1,16 @@
 package com.bwiv.expensify.controllers;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bwiv.expensify.models.Event;
@@ -37,7 +43,7 @@ public class MyController {
     //     }
     // }
 
-    @GetMapping(value="/api/events")
+    @GetMapping("/api/events")
     public List<Event> index() {
         return eventService.getEvents();
     }
@@ -45,5 +51,24 @@ public class MyController {
     @GetMapping("/api/users")
     public List<User> getAllUsers() {
         return userService.allUsers();
+    }
+    
+    @PostMapping("/api/events")
+    public Event create(@RequestParam String eventName, @RequestParam String description, @RequestParam  String eventDate, @RequestParam Long userId) {
+        User user = userService.getUserById(userId);
+        Event event = new Event();
+        event.setEventName(eventName);
+        event.setDescription(description);
+        // Creates a local date obj 
+        LocalDate localDate = LocalDate.parse(eventDate);
+        //getting timezone of the computer thats currently running
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        //make a date assuming the day started in this time zone
+        Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+        //sets it to a date
+        event.setEventDate(date);
+        event.setUser(user);
+        
+        return eventService.createEvent(event);
     }
 }
