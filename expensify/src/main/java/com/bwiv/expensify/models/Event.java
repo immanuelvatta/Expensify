@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +23,8 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "events")
@@ -52,9 +53,12 @@ public class Event implements Serializable {
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private List<Expense> expenses;
 
+    @NotNull
+    @Size(min=2, message="need more than 2 chars")
     private String eventName;
 
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date eventDate;
 
     private String description;
@@ -69,7 +73,7 @@ public class Event implements Serializable {
     }
 
     // ! don't delete me!!
-    @JsonProperty
+    // @JsonProperty
     public Long getUserId() {
         return user == null ? null : user.getId();
     }

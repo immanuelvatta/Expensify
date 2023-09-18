@@ -22,6 +22,10 @@ const Home = () => {
     navigate("/event");
   };
 
+  const sidebar = () => {
+    navigate("/sidebar");
+  }
+
   useEffect(() => {
     getAllEvents()
       .then((events) => {
@@ -46,6 +50,7 @@ const Home = () => {
       <div>
         <Button onClick={logout}>logout</Button>
         <Button onClick={createEvent}>Event</Button>
+        <Button onClick={sidebar}>Sidebar</Button>
         <p>Welcome home</p> 
         <p>{currentUserEmail}</p>
         {allEvents.length > 0 && (

@@ -30,7 +30,7 @@ function CreateEvent() {
       formData.append("eventName", event.eventName);
       formData.append("description", event.description);
       formData.append("eventDate", event.eventDate);
-      formData.append("userId", userObj.id);
+      formData.append("user", userObj.id);
       await createEvent(formData)
         .then(() => navigate("/home"))
         .catch((error) => console.log(error));

@@ -3,6 +3,7 @@ import Login from "./views/Login";
 import SignUp from "./views/SignUp";
 import Home from "./views/Home";
 import CreateEvent from "./views/CreateEvent";
+import { Dashboard } from "./views/Dashboard";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/signup" element={<SignUp/>}/>
           <Route path="/home" element={<Home/>} />
           <Route path="/event" element={<CreateEvent />} />
+          <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </BrowserRouter>
     </>
