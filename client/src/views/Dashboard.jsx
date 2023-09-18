@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from "../context/authContext";
 import { CssVarsProvider } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -6,8 +7,9 @@ import Box from '@mui/joy/Box';
 import Divider from '@mui/joy/Divider';
 import Grid from '@mui/joy/Grid';
 import Stack from '@mui/joy/Stack';
-import {useScript} from "../utils/useScript";
-import FirstSidebar from '../components/dashboard/FirstSidebar'; 
+import { useScript } from "../utils/useScript";
+import FirstSidebar from '../components/dashboard/FirstSidebar';
+import { getUserByEmail } from '../../services/userService';
 import Header from '../components/dashboard/Header';
 import RentalCard from '../components/dashboard/RentalCard';
 import Main from '../components/dashboard/main';
@@ -17,12 +19,28 @@ import Filters from '../components/dashboard/Filters';
 import Toggles from '../components/dashboard/Toggles';
 import Pagination from '../components/dashboard/Pagination';
 import { Typography } from '@mui/joy';
+import Select, { selectClasses } from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/joy';
 
 const useEnhancedEffect =
   typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 export function Dashboard() {
   const status = useScript(`https://unpkg.com/feather-icons`);
+  const { setCurrentUser, currentUser, setCurrentUserEmail, currentUserEmail } = useContext(AuthContext);
+  const [userName, setUserName] = useState("");
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [allEvents, setAllEvents] = useState([]);
+  const navigate = useNavigate("");
+  const firstLetter = userName.charAt(0).toUpperCase();
+  const uppercaseUserName = firstLetter + userName.slice(1);
+
+  const handleTripPicker = () => {
+    navigate()
+  }
 
   useEnhancedEffect(() => {
     if (typeof feather !== 'undefined') {
@@ -30,29 +48,93 @@ export function Dashboard() {
     }
   }, [status]);
 
-  return (
-    <CssVarsProvider disableTransitionOnChange>
-      <GlobalStyles
-        styles={(theme) => ({
-          '[data-feather], .feather': {
-            color: `var(--Icon-color, ${theme.vars.palette.text.icon})`,
-            margin: 'var(--Icon-margin)',
-            fontSize: `var(--Icon-fontSize, ${theme.vars.fontSize.xl})`,
-            width: '1em',
-            height: '1em',
-          },
-        })}
-      />
-      <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-        <Header />
-        <FirstSidebar />
-        <Main>
-            <Typography sx={{  }}>
-                welcome
-            </Typography>
-        </Main>
-      </Box>
-    </CssVarsProvider>
-  );
-}
+  useEffect(() => {
+    getUserByEmail(currentUserEmail)
+      .then((user) => {
+        setUserName(user.userName);
+        setAllEvents(user.events);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, []);
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login");
+    } else if (currentUserEmail) {
+      setShouldLoad(true);
+    }
+  }, [currentUser, currentUserEmail]);
+
+  if (shouldLoad) {
+    return (
+      <CssVarsProvider disableTransitionOnChange>
+        <GlobalStyles
+          styles={(theme) => ({
+            '[data-feather], .feather': {
+              color: `var(--Icon-color, ${theme.vars.palette.text.icon})`,
+              margin: 'var(--Icon-margin)',
+              fontSize: `var(--Icon-fontSize, ${theme.vars.fontSize.xl})`,
+              width: '1em',
+              height: '1em',
+            },
+          })}
+        />
+        <CssBaseline />
+        <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
+          <Header />
+          <FirstSidebar />
+          <Main>
+            <Box sx={{ p: 5, mt: 5, display: "flex", justifyContent: "space-between" }}>
+              <Box>
+                <Typography
+                level='h1'
+                >
+                  Welcome, {uppercaseUserName}
+                </Typography>
+                <Typography
+                level='h1'
+                >
+                  current trip
+                </Typography>
+              </Box>
+              <form onSubmit={handleTripPicker}>
+                <Select
+                  placeholder="Select a trip"
+                  indicator={<KeyboardArrowDown />}
+                  sx={{
+                    width: 240,
+                    [`& .${selectClasses.indicator}`]: {
+                      transition: '0.2s',
+                      [`&.${selectClasses.expanded}`]: {
+                        transform: 'rotate(-180deg)',
+                      },
+                    },
+                  }}
+                >
+                  {allEvents.map((event) => (
+                    <Option 
+                    key={event.id} 
+                    value={event.id}
+                    >
+                      {event.eventName}
+                    </Option>
+                  ))}
+                </Select>
+                <Button
+                  type='submit'
+                  fullWidth
+                  sx={{mt:2}}
+                >hi mommy
+                </Button>
+              </form>
+            </Box>
+          </Main>
+        </Box>
+      </CssVarsProvider>
+    );
+  } else {
+    return null;
+  }
+};
