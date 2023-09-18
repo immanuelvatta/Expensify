@@ -15,7 +15,7 @@ import { GoogleIcon } from "../components/GoogleIcon";
 import LogoSVG from "../assets/Logo";
 import { AuthContext } from "../context/authContext";
 import { auth, provider } from "../firebase/firebase";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { getUserByEmail, createUser } from "../../services/userService";
 import FloatingLabelInput from "../components/InputText";
 

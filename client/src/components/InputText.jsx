@@ -69,7 +69,7 @@ export default function FloatingLabelInput({type, label, placeholder, name, valu
     <Input
       label={{label}}
       slots={{ input: InnerInput }}
-      slotProps={{ input: { placeholder: placeholder, type: type, label: label } }}
+      slotProps={{ input: { placeholder: placeholder, type: type, label: label, onChange: onChange } }}
       sx={{
         '--Input-minHeight': '56px',
         '--Input-radius': '6px',

@@ -86,7 +86,7 @@ const SignUp = () => {
       return;
     }
     setPasswordsMatch(true);
-
+    console.log(password, userName, email)
     try {
       const newUser = await createUserWithEmailAndPassword(auth, email, password);
       setCurrentUser(newUser.user.uid);
@@ -252,7 +252,7 @@ const SignUp = () => {
                   name="password"
                   placeholder="Enter Your Password"
                   value={password}
-                  onChange={(e) => setP(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   />
               </FormControl>
               <FormControl required>
