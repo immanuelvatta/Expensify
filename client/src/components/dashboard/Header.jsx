@@ -3,8 +3,10 @@ import { useColorScheme } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import IconButton from '@mui/joy/IconButton';
 import Sheet from '@mui/joy/Sheet';
-import MuiLogo from './MuiLogo';
+import LogoSVG from '../../assets/Logo';
+import { Typography } from '@mui/joy';
 import { toggleSidebar } from '../../utils/utils';
+import  Box  from '@mui/joy/Box';
 
 function ColorSchemeToggle({ onClick, sx, ...props }) {
   const { mode, setMode } = useColorScheme();
@@ -74,6 +76,7 @@ export default function Header() {
         px: 2,
         gap: 1,
         boxShadow: 'sm',
+        justifyContent: "space-between"
       }}
     >
       <GlobalStyles
@@ -85,16 +88,21 @@ export default function Header() {
             },
           },
         })}
-      />
-      <IconButton
-        onClick={() => toggleSidebar()}
-        variant="outlined"
-        color="neutral"
-        size="sm"
-      >
-        <i data-feather="menu" />
-      </IconButton>
-      <MuiLogo variant="plain" sx={{ boxShadow: 'none', mr: 'auto' }} />
+        />
+      <Box sx={{ display: "flex", alignItems: 'center', gap: 2.5 }}>
+        <IconButton
+          onClick={() => toggleSidebar()}
+          variant="outlined"
+          color="neutral"
+          size="sm"
+        >
+          <i data-feather="menu" />
+        </IconButton>
+        <LogoSVG width={40} height={40} color={"darkgray"} />
+        <Typography sx={{ mt: 0 }}>
+          Expensify
+        </Typography>
+      </Box>
       <ColorSchemeToggle id={undefined} />
     </Sheet>
   );

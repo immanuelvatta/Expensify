@@ -6,9 +6,11 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import IconButton from '@mui/joy/IconButton';
 import Sheet from '@mui/joy/Sheet';
-import MuiLogo from './MuiLogo';
+import Logo from "../../assets/Logo";
 import { openSidebar, closeSidebar } from '../../utils/utils';
 import ColorSchemeToggle from './ColorSchemeToggle';
+import LogoSVG from '../../assets/Logo';
+import { Typography } from '@mui/joy';
 
 export default function FirstSidebar() {
   return (
@@ -56,7 +58,7 @@ export default function FirstSidebar() {
       >
         <i data-feather="arrow-left" />
       </IconButton>
-      <MuiLogo />
+      <LogoSVG width={40} height={40} color={"darkgray"} sx={{ mb:0 }}/>
       <List sx={{ '--ListItem-radius': '8px', '--List-gap': '12px' }}>
         <ListItem>
           <ListItemButton>

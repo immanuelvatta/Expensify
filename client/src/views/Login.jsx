@@ -5,11 +5,9 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
 import GlobalStyles from "@mui/joy/GlobalStyles";
-import Input from "@mui/joy/Input";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 import { CssVarsProvider } from "@mui/joy/styles";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ColorSchemeToggle from "../components/ColorSchemeToggle";
@@ -17,9 +15,9 @@ import { GoogleIcon } from "../components/GoogleIcon";
 import LogoSVG from "../assets/Logo";
 import { AuthContext } from "../context/authContext";
 import { auth, provider } from "../firebase/firebase";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { getUserByEmail, createUser } from "../../services/userService";
-
+import FloatingLabelInput from "../components/InputText";
 
 const Login = () => {
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -30,33 +28,33 @@ const Login = () => {
   const navigate = useNavigate();
   const { currentUser, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
 
-    const handleGoogleSignIn = () => {
-      signInWithPopup(auth, provider)
-        .then(async(data) => {
-          const emailExists = await getUserByEmail(data.user.email);
-          if (!emailExists) {
-            setCurrentUser(data.user.uid);
-            localStorage.setItem("uid", data.user.uid);
-            setCurrentUserEmail(data.user.email);
-            localStorage.setItem("email", data.user.email);
-            const formData = new FormData();
-            formData.append("uid", data.user.uid);
-            formData.append("userName", data.user.displayName);
-            formData.append("email", data.user.email);
-            createUser(formData);
-            navigate("/home");
-          } else {
-            setCurrentUser(data.user.uid);
-            localStorage.setItem("uid", data.user.uid);
-            setCurrentUserEmail(data.user.email);
-            localStorage.setItem("email", data.user.email);
-            navigate("/home");
-          }
-        })
-        .catch((error) => {
-          console.error('Google Sign-In Error:', error);
-        });
-    }
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then(async (data) => {
+        const emailExists = await getUserByEmail(data.user.email);
+        if (!emailExists) {
+          setCurrentUser(data.user.uid);
+          localStorage.setItem("uid", data.user.uid);
+          setCurrentUserEmail(data.user.email);
+          localStorage.setItem("email", data.user.email);
+          const formData = new FormData();
+          formData.append("uid", data.user.uid);
+          formData.append("userName", data.user.displayName);
+          formData.append("email", data.user.email);
+          createUser(formData);
+          navigate("/home");
+        } else {
+          setCurrentUser(data.user.uid);
+          localStorage.setItem("uid", data.user.uid);
+          setCurrentUserEmail(data.user.email);
+          localStorage.setItem("email", data.user.email);
+          navigate("/home");
+        }
+      })
+      .catch((error) => {
+        console.error('Google Sign-In Error:', error);
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -150,8 +148,9 @@ const Login = () => {
                   <Box
                     component="span"
                     sx={{
-                      width: 24, 
-                      height: 24,}}
+                      width: 24,
+                      height: 24,
+                    }}
                   ></Box>
                 }
               >
@@ -183,12 +182,12 @@ const Login = () => {
                 },
               }}
             >
-              <div >
-                  <Box style={{display:"flex", alignContent: "center"}}>
-                <Typography component="h1" fontSize="xl2" fontWeight="lg">
-                  Sign in to your account
-                </Typography>
-                  </Box>
+              <div>
+                <Box style={{ display: "flex", alignContent: "center" }}>
+                  <Typography component="h1" fontSize="xl2" fontWeight="lg">
+                    Sign in to your account
+                  </Typography>
+                </Box>
                 <Typography level="body-sm" sx={{ my: 1, mb: 3 }}>
                   Welcome back
                 </Typography>
@@ -200,23 +199,27 @@ const Login = () => {
                 }}
               >
                 <FormControl required error={emailError}>
-                  <FormLabel>Email</FormLabel>
-                  <Input
+                  <FloatingLabelInput
                     type="email"
+                    label="Email"
                     name="email"
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </FormControl>
+
                 <FormControl required>
-                  <FormLabel>Password</FormLabel>
-                  <Input
+                  <FloatingLabelInput
                     type="password"
+                    label="Password"
                     name="password"
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </FormControl>
+
                 {error && (
                   <Typography level="h4" color="danger" sx={{ my: 2 }}>
                     {error}
