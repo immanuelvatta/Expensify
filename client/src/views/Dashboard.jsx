@@ -16,6 +16,7 @@ import Search from '../components/dashboard/Search';
 import Filters from '../components/dashboard/Filters';
 import Toggles from '../components/dashboard/Toggles';
 import Pagination from '../components/dashboard/Pagination';
+import { Typography } from '@mui/joy';
 
 const useEnhancedEffect =
   typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
@@ -47,7 +48,9 @@ export function Dashboard() {
         <Header />
         <FirstSidebar />
         <Main>
-            
+            <Typography sx={{  }}>
+                welcome
+            </Typography>
         </Main>
       </Box>
     </CssVarsProvider>

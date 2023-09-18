@@ -17,6 +17,7 @@ import { AuthContext } from "../context/authContext";
 import LogoSVG from "../assets/Logo";
 import { createUser, getUserByEmail } from "../../services/userService";
 import { signInWithPopup } from "firebase/auth";
+import FloatingLabelInput from "../components/InputText";
 
 const SignUp = () => {
   const [emailError, setEmailError] = useState(false);
@@ -32,7 +33,7 @@ const SignUp = () => {
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, provider)
-      .then(async(data) => {
+      .then(async (data) => {
         const emailExists = await getUserByEmail(data.user.email);
         if (!emailExists) {
           const formData = new FormData();
@@ -65,7 +66,7 @@ const SignUp = () => {
     e.preventDefault();
     setEmailError(false)
 
-    if(userName.length < 2) {
+    if (userName.length < 2) {
       setError(
         "User name must be more than two characters"
       )
@@ -174,11 +175,11 @@ const SignUp = () => {
                 <Box
                   component="span"
                   sx={{
-                    width: 24, 
+                    width: 24,
                     height: 24,
                   }}
                 >
-                  
+
                 </Box>
               }
             >
@@ -225,46 +226,50 @@ const SignUp = () => {
               }}
             >
               <FormControl required>
-                <FormLabel>User Name:</FormLabel>
-                <Input
+                <FloatingLabelInput
                   type="text"
+                  label="Username"
                   name="userName"
+                  placeholder="Enter Your Username"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </FormControl>
               <FormControl required>
-                <FormLabel>Email</FormLabel>
-                <Input
+                <FloatingLabelInput
                   type="email"
+                  label="Email"
                   name="email"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
               <FormControl required>
-                <FormLabel>Password</FormLabel>
-                <Input
+                <FloatingLabelInput
                   type="password"
+                  label="Password"
                   name="password"
+                  placeholder="Enter Your Password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                  onChange={(e) => setP(e.target.value)}
+                  />
               </FormControl>
               <FormControl required>
-                <FormLabel>Confirm Password</FormLabel>
-                <Input
+                <FloatingLabelInput
                   type="password"
+                  label="Confirm Password"
                   name="confirmPassword"
+                  placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                  />
               </FormControl>
               {error && (
-                  <Typography level="h4" color="danger" sx={{ my: 2 }}>
-                    {error}
-                  </Typography>
-                )}
+                <Typography level="h4" color="danger" sx={{ my: 2 }}>
+                  {error}
+                </Typography>
+              )}
               <Box
                 sx={{
                   display: "flex",
