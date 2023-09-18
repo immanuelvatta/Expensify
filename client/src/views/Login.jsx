@@ -18,7 +18,7 @@ import LogoSVG from "../assets/Logo";
 import { AuthContext } from "../context/authContext";
 import { auth, provider } from "../firebase/firebase";
 import { signInWithPopup } from "firebase/auth";
-import { getUserByEmail } from "../../services/userService";
+import { getUserByEmail, createUser } from "../../services/userService";
 
 
 const Login = () => {

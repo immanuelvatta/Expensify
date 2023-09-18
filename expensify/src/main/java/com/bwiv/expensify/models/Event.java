@@ -2,13 +2,13 @@ package com.bwiv.expensify.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -26,25 +27,38 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "events")
-// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class Event implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false )
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<Balance> balances;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<UserEvent> eventParticipants;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<Expense> expenses;
+
     private String eventName;
-    
+
     @Temporal(TemporalType.DATE)
     private Date eventDate;
-    
+
     private String description;
-    
+
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
@@ -54,11 +68,34 @@ public class Event implements Serializable {
     public Event() {
     }
 
-    
-
+    // ! don't delete me!!
     @JsonProperty
-    public Long getUserId(){
+    public Long getUserId() {
         return user == null ? null : user.getId();
+    }
+
+    public List<Expense> getExpenses() {
+        return this.expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+    }
+
+    public List<UserEvent> getEventParticipants() {
+        return this.eventParticipants;
+    }
+
+    public void setEventParticipants(List<UserEvent> eventParticipants) {
+        this.eventParticipants = eventParticipants;
+    }
+
+    public List<Balance> getBalances() {
+        return this.balances;
+    }
+
+    public void setBalances(List<Balance> balances) {
+        this.balances = balances;
     }
 
     public Long getId() {

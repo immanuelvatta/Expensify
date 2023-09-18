@@ -28,8 +28,6 @@ public class UserService {
     }
 
     public User getUserByEmail(String email) {
-        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        System.out.println(email);
         return userRepository.findByEmail(email);
     }
 }
