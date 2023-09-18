@@ -12,25 +12,65 @@ import Typography from "@mui/joy/Typography";
 import { GoogleIcon } from "../components/GoogleIcon";
 import ColorSchemeToggle from "../components/ColorSchemeToggle";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebase"
+import { auth, provider } from "../firebase/firebase"
 import { AuthContext } from "../context/authContext";
 import LogoSVG from "../assets/Logo";
-import { createUser } from "../../services/userService";
+import { createUser, getUserByEmail } from "../../services/userService";
+import { signInWithPopup } from "firebase/auth";
 
 const SignUp = () => {
   const [emailError, setEmailError] = useState(false);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword , setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [error, setError] = useState(null);
   const { currentUser, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
-  
+
   const navigate = useNavigate("");
+
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then(async(data) => {
+        const emailExists = await getUserByEmail(data.user.email);
+        if (!emailExists) {
+          const formData = new FormData();
+          formData.append("uid", data.user.uid);
+          formData.append("userName", data.user.displayName);
+          formData.append("email", data.user.email);
+          try {
+            await createUser(formData);
+            setCurrentUser(data.user.uid);
+            localStorage.setItem("uid", data.user.uid);
+            setCurrentUserEmail(data.user.email);
+            localStorage.setItem("email", data.user.email);
+            navigate("/home");
+          } catch (error) {
+            navigate("/login");
+          }
+        } else {
+          navigate("/login");
+        }
+      })
+      .catch((error) => {
+        console.error('Google Sign-In Error:', error);
+        setError(
+          "Google Sign-In Error"
+        )
+      });
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEmailError(false)
+
+    if(userName.length < 2) {
+      setError(
+        "User name must be more than two characters"
+      )
+      return;
+    }
 
     if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
       setEmailError(true)
@@ -39,18 +79,21 @@ const SignUp = () => {
 
     if (password !== confirmPassword) {
       setPasswordsMatch(false);
+      setError(
+        "Make sure your passwords match"
+      )
       return;
     }
     setPasswordsMatch(true);
 
-    try{
+    try {
       const newUser = await createUserWithEmailAndPassword(auth, email, password);
       setCurrentUser(newUser.user.uid);
       localStorage.setItem("uid", newUser.user.uid);
       setCurrentUserEmail(newUser.user.email);
       localStorage.setItem("email", newUser.user.email);
       console.log(newUser)
-      try{
+      try {
         const formData = new FormData();
         formData.append("uid", newUser.user.uid);
         formData.append("userName", userName);
@@ -60,11 +103,19 @@ const SignUp = () => {
       } catch (err) {
         console.log("Failed to send it to the db", err);
       }
-    }catch (error){
-      console.err("Registration Error: ", error);
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        // The email is already in use
+        setError(
+          "Email is already in use"
+        )
+        console.error('Email is already taken.');
+      } else {
+        console.error(error);
+      }
     }
   }
-  
+
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -123,18 +174,15 @@ const SignUp = () => {
                 <Box
                   component="span"
                   sx={{
-                    width: 24,
+                    width: 24, 
                     height: 24,
-                    background: (theme) =>
-                      `linear-gradient(45deg, ${theme.vars.palette.primary.solidBg}, ${theme.vars.palette.primary.solidBg} 30%, ${theme.vars.palette.primary.softBg})`,
-                    borderRadius: "50%",
-                    boxShadow: (theme) => theme.shadow.md,
-                    "--joy-shadowChannel": (theme) =>
-                      theme.vars.palette.primary.mainChannel,
                   }}
-                />
+                >
+                  
+                </Box>
               }
-            ><LogoSVG width={40} height={40} color={"darkgray"} sx={{ m: 1 }} />
+            >
+              <LogoSVG width={40} height={40} color={"darkgray"} sx={{ m: 1 }} />
               BWIV -Expensify
             </Typography>
             <ColorSchemeToggle />
@@ -178,40 +226,45 @@ const SignUp = () => {
             >
               <FormControl required>
                 <FormLabel>User Name:</FormLabel>
-                <Input 
-                type="text" 
-                name="userName"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                <Input
+                  type="text"
+                  name="userName"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
               </FormControl>
               <FormControl required>
                 <FormLabel>Email</FormLabel>
                 <Input
-                type="email"
-                name="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
               <FormControl required>
                 <FormLabel>Password</FormLabel>
-                <Input 
-                type="password" 
-                name="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                <Input
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
               <FormControl required>
                 <FormLabel>Confirm Password</FormLabel>
-                <Input 
-                type="password" 
-                name="confirmPassword" 
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                <Input
+                  type="password"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </FormControl>
+              {error && (
+                  <Typography level="h4" color="danger" sx={{ my: 2 }}>
+                    {error}
+                  </Typography>
+                )}
               <Box
                 sx={{
                   display: "flex",
@@ -224,9 +277,10 @@ const SignUp = () => {
                 </RouterLink>
               </Box>
               <Button type="submit" fullWidth>
-                Sign up with google
+                Sign Up
               </Button>
               <Button
+                onClick={handleGoogleSignIn}
                 variant="outlined"
                 color="neutral"
                 fullWidth
