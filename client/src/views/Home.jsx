@@ -20,7 +20,7 @@ const Home = () => {
 
   const createEvent = () => {
     navigate("/event");
-  }
+  };
 
   useEffect(() => {
     getAllEvents()
@@ -39,24 +39,29 @@ const Home = () => {
     } else if (currentUserEmail) {
       setShouldLoad(true);
     }
-  }, [currentUser]);
+  }, [currentUser, currentUserEmail]);
+
   if (shouldLoad) {
     return (
-      allEvents.length > 0 && (
-        <div>
-          Welcome home
-          {currentUserEmail}
-          <Button onClick={logout}>logout</Button>
-          <Button onClick={createEvent}>Event</Button>
-          {allEvents.map((event) => (
-            <p key={event.id}>
-              {event.description} <br />
-              {event.eventName}
-            </p>
-          ))}
-        </div>
-      )
+      <div>
+        <Button onClick={logout}>logout</Button>
+        <Button onClick={createEvent}>Event</Button>
+        <p>Welcome home</p> 
+        <p>{currentUserEmail}</p>
+        {allEvents.length > 0 && (
+          <div>
+            {allEvents.map((event) => (
+              <div key={event.id}>
+                <p>{event.description}</p>
+                <p>{event.eventName}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     );
+  } else {
+    return null;
   }
 };
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -24,16 +25,17 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String uid;
     private String userName;
     private String email;
-    
+
     // This will not allow the createdAt column to be updated after creation
     @JsonIgnore
     @Column(updatable = false)
@@ -46,7 +48,55 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Event> events;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "owedToUser", fetch = FetchType.LAZY)
+    private List<Balance> balancesCredit;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "owingUser", fetch = FetchType.LAZY)
+    private List<Balance> balancesDebt;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserEvent> userEvents;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserExpense> userExpenses;
+
     public User() {
+    }
+
+    public List<UserExpense> getUserExpenses() {
+        return this.userExpenses;
+    }
+
+    public void setUserExpenses(List<UserExpense> userExpenses) {
+        this.userExpenses = userExpenses;
+    }
+
+    public List<UserEvent> getUserEvents() {
+        return this.userEvents;
+    }
+
+    public void setUserEvents(List<UserEvent> userEvents) {
+        this.userEvents = userEvents;
+    }
+
+    public List<Balance> getBalancesCredit() {
+        return this.balancesCredit;
+    }
+
+    public void setBalancesCredit(List<Balance> balancesCredit) {
+        this.balancesCredit = balancesCredit;
+    }
+
+    public List<Balance> getBalancesDebt() {
+        return this.balancesDebt;
+    }
+
+    public void setBalancesDebt(List<Balance> balancesDebt) {
+        this.balancesDebt = balancesDebt;
     }
 
     public List<Event> getEvents() {
