@@ -14,8 +14,6 @@ export const AuthProvider = ({ children }) => {
         return localStorage.getItem("email") || null
     });
 
-
-
     return (
         <AuthContext.Provider
             value={{
