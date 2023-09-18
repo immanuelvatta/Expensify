@@ -87,4 +87,11 @@ public class MyController {
         user.setEmail(email);
         return userService.createUser(user);
     }
+
+    @GetMapping("/api/users/{email}")
+    public User getByEmail(@RequestParam String email) {
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(email);
+        return userService.getUserByEmail(email);
+    }
 }

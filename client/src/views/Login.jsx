@@ -16,7 +16,10 @@ import ColorSchemeToggle from "../components/ColorSchemeToggle";
 import { GoogleIcon } from "../components/GoogleIcon";
 import LogoSVG from "../assets/Logo";
 import { AuthContext } from "../context/authContext";
-import { auth } from "../firebase/firebase";
+import { auth, provider } from "../firebase/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { getUserByEmail } from "../../services/userService";
+
 
 const Login = () => {
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -25,8 +28,35 @@ const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { currentUser, setCurrentUser, setCurrentUserEmail } =
-    useContext(AuthContext);
+  const { currentUser, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
+
+    const handleGoogleSignIn = () => {
+      signInWithPopup(auth, provider)
+        .then(async(data) => {
+          const emailExists = await getUserByEmail(data.user.email);
+          if (!emailExists) {
+            setCurrentUser(data.user.uid);
+            localStorage.setItem("uid", data.user.uid);
+            setCurrentUserEmail(data.user.email);
+            localStorage.setItem("email", data.user.email);
+            const formData = new FormData();
+            formData.append("uid", data.user.uid);
+            formData.append("userName", data.user.displayName);
+            formData.append("email", data.user.email);
+            createUser(formData);
+            navigate("/home");
+          } else {
+            setCurrentUser(data.user.uid);
+            localStorage.setItem("uid", data.user.uid);
+            setCurrentUserEmail(data.user.email);
+            localStorage.setItem("email", data.user.email);
+            navigate("/home");
+          }
+        })
+        .catch((error) => {
+          console.error('Google Sign-In Error:', error);
+        });
+    }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -120,15 +150,8 @@ const Login = () => {
                   <Box
                     component="span"
                     sx={{
-                      width: 24,
-                      height: 24,
-                      // background: (theme) =>
-                      //   `linear-gradient(45deg, ${theme.vars.palette.primary.solidBg}, ${theme.vars.palette.primary.solidBg} 30%, ${theme.vars.palette.primary.softBg})`,
-                      // borderRadius: "50%",
-                      // boxShadow: (theme) => theme.shadow.md,
-                      // "--joy-shadowChannel": (theme) =>
-                      //   theme.vars.palette.primary.mainChannel,
-                    }}
+                      width: 24, 
+                      height: 24,}}
                   ></Box>
                 }
               >
@@ -163,7 +186,6 @@ const Login = () => {
               <div >
                   <Box style={{display:"flex", alignContent: "center"}}>
                 <Typography component="h1" fontSize="xl2" fontWeight="lg">
-                    <LogoSVG width={50} height={50} color={"darkgray"} sx={{ m: 1 }} />
                   Sign in to your account
                 </Typography>
                   </Box>
@@ -222,6 +244,7 @@ const Login = () => {
                   Sign in
                 </Button>
                 <Button
+                  onClick={handleGoogleSignIn}
                   variant="outlined"
                   color="neutral"
                   fullWidth
