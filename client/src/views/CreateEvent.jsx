@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { createEvent } from "../../services/eventService";
+import { AuthContext } from "../context/authContext";
+import { getUserByEmail } from "../../services/userService";
 
 const initialEvent = {
   eventName: "",
@@ -10,6 +12,7 @@ const initialEvent = {
 };
 
 function CreateEvent() {
+  const { currentUserEmail } = useContext(AuthContext);
   const [event, setEvent] = useState(initialEvent);
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -19,16 +22,22 @@ function CreateEvent() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("eventName", event.eventName);
-    formData.append("description", event.description);
-    formData.append("eventDate", event.eventDate);
-    formData.append("userId", event.userId);
-    createEvent(formData)
-      .then(() => navigate("/home"))
-      .catch((error) => console.log(error));
+    try {
+      const userObj = await getUserByEmail(currentUserEmail);
+      const formData = new FormData();
+      formData.append("eventName", event.eventName);
+      formData.append("description", event.description);
+      formData.append("eventDate", event.eventDate);
+      formData.append("userId", userObj.id);
+      await createEvent(formData)
+        .then(() => navigate("/home"))
+        .catch((error) => console.log(error));
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   return (

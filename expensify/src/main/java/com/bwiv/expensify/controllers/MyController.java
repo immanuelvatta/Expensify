@@ -1,6 +1,5 @@
 package com.bwiv.expensify.controllers;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -23,25 +22,12 @@ import com.bwiv.expensify.services.UserService;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 public class MyController {
-    // @Autowired
-    // private JdbcTemplate jdbcTemplate;
 
     @Autowired
     EventService eventService;
 
     @Autowired
     UserService userService;
-
-    // @GetMapping("/test")
-    // public String testDatabaseConnection() {
-    //     try {
-    //         // Execute a simple query to test the connection
-    //         jdbcTemplate.queryForObject("SELECT 1", Integer.class);
-    //         return "Database connection successful!";
-    //     } catch (Exception e) {
-    //         return "Database connection failed: " + e.getMessage();
-    //     }
-    // }
 
     @GetMapping("/api/events")
     public List<Event> index() {
@@ -90,8 +76,6 @@ public class MyController {
 
     @GetMapping("/api/users/{email}")
     public User getByEmail(@RequestParam String email) {
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(email);
         return userService.getUserByEmail(email);
     }
 }

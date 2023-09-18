@@ -18,11 +18,9 @@ async function createUser(user) {
 async function getUserByEmail(email) {
     try {
         const res = await http.get(`/users/email?email=${email}`);
-        console.log(res);
-        console.log("i won");
         return res.data;
     } catch (error) {
-        console.log("i lost");
+        console.log(error);
         throw error;
     }
 }

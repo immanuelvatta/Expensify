@@ -4,32 +4,46 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "expenseItems")
-public class ExpenseItem {
+@Table(name = "user_expenses")
+public class UserExpense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expense_id", referencedColumnName = "id", nullable = false)
+    private Expense expense;
+
+    private Double amountOwed;
+
+    @JsonIgnore
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
-    public ExpenseItem() {
+    public UserExpense() {
     }
 
     public Long getId() {
@@ -40,12 +54,28 @@ public class ExpenseItem {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return this.userId;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Expense getExpense() {
+        return this.expense;
+    }
+
+    public void setExpense(Expense expense) {
+        this.expense = expense;
+    }
+
+    public Double getAmountOwed() {
+        return this.amountOwed;
+    }
+
+    public void setAmountOwed(Double amountOwed) {
+        this.amountOwed = amountOwed;
     }
 
     public Date getCreatedAt() {
@@ -73,5 +103,4 @@ public class ExpenseItem {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
-
 }

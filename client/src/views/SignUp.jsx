@@ -26,7 +26,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [error, setError] = useState(null);
-  const { currentUser, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
+  const { setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
 
   const navigate = useNavigate("");
 
