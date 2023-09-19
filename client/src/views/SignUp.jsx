@@ -216,7 +216,7 @@ const SignUp = () => {
                 Please create an account
               </Typography>
               <Typography level="body-sm" sx={{ my: 1, mb: 3 }}>
-                Nice to meet you!
+                Take control of your expense!
               </Typography>
             </div>
             <form
