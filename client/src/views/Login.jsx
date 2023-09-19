@@ -9,7 +9,7 @@ import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 import { CssVarsProvider } from "@mui/joy/styles";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import ColorSchemeToggle from "../components/ColorSchemeToggle";
 import { GoogleIcon } from "../components/GoogleIcon";
 import LogoSVG from "../assets/Logo";
@@ -239,9 +239,9 @@ const Login = () => {
                   >
                     Forgot your password?
                   </Link>
-                  <Link fontSize="sm" href="/signup" fontWeight="lg">
+                  <RouterLink fontSize="sm" to={"/signup"} fontWeight="lg">
                     Don't have an Account?
-                  </Link>
+                  </RouterLink>
                 </Box>
                 <Button type="submit" fullWidth>
                   Sign in
