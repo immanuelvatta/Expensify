@@ -17,7 +17,7 @@ async function createUser(user) {
 
 async function getUserByEmail(email) {
     try {
-        const res = await http.get(`/users/email?email=${email}`);
+        const res = await http.get(`/users/email/email?email=${email}`);
         return res.data;
     } catch (error) {
         console.log(error);
@@ -25,4 +25,24 @@ async function getUserByEmail(email) {
     }
 }
 
-export { createUser, getUserByEmail }
+async function getUserByUserName(userName) {
+    try{
+        const res = await http.get(`/users/userName/userName?userName=${userName}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+async function getAllUsers() {
+    try {
+        const res = await http.get('/users');
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export { createUser, getUserByEmail, getAllUsers, getUserByUserName }

@@ -90,8 +90,13 @@ public class MyController {
     //     return userService.createUser(user);
     // }
 
-    @GetMapping("/api/users/{email}")
+    @GetMapping("/api/users/email/{email}")
     public User getByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
+    }
+
+    @GetMapping("/api/users/userName/{userName}")
+    public User getByUserName(@RequestParam String userName) {
+        return userService.getUserByUsername(userName);
     }
 }

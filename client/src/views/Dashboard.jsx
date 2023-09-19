@@ -9,7 +9,7 @@ import Grid from "@mui/joy/Grid";
 import Stack from "@mui/joy/Stack";
 import { useScript } from "../utils/useScript";
 import FirstSidebar from "../components/dashboard/FirstSidebar";
-import { getUserByEmail } from "../../services/userService";
+import { getUserByEmail, getAllUsers, getUserByUserName } from "../../services/userService";
 import Header from "../components/dashboard/Header";
 import RentalCard from "../components/dashboard/RentalCard";
 import Main from "../components/dashboard/main";
@@ -18,7 +18,7 @@ import Search from "../components/dashboard/Search";
 import Filters from "../components/dashboard/Filters";
 import Toggles from "../components/dashboard/Toggles";
 import Pagination from "../components/dashboard/Pagination";
-import { Typography } from "@mui/joy";
+import { Card, Typography } from "@mui/joy";
 import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/joy";
 import { MenuItem } from "@mui/joy";
 import { FormControl } from "@mui/joy"
-
+import Avatar from '@mui/joy/Avatar';
 const useEnhancedEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
@@ -36,21 +36,17 @@ export function Dashboard() {
   const [userName, setUserName] = useState("");
   const [shouldLoad, setShouldLoad] = useState(false);
   const [allEvents, setAllEvents] = useState([]);
-  const [eventId, setEventId] = useState();
+  const [allUsers, setAllUsers] = useState([])
   const navigate = useNavigate();
   const firstLetter = userName.charAt(0).toUpperCase();
   const uppercaseUserName = firstLetter + userName.slice(1);
-
-  // const tripChangeHandler = (e) => {
-  //   console.log(e.target.value);
-  //   const selectedEventId = e.target.value;
-  //   setEventId(selectedEventId);
-  // };
+  
 
   const handleTripPicker = e => {
     e.preventDefault();
-      console.log("Navigating to trip page");
-      navigate(`/trip/${eventId}`);
+    const formData = new FormData(e.currentTarget);
+    const formJson = Object.fromEntries(formData.entries());
+    navigate(`/trip/${formJson.eventId}`)
   };
 
   useEnhancedEffect(() => {
@@ -67,8 +63,19 @@ export function Dashboard() {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
   }, []);
+
+  useEffect(() => {
+    getAllUsers()
+    .then((users) => {
+      setAllUsers(users)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }, [])
+  
 
   useEffect(() => {
     if (!currentUser) {
@@ -76,7 +83,7 @@ export function Dashboard() {
     } else if (currentUserEmail) {
       setShouldLoad(true);
     }
-  }, [currentUser, currentUserEmail]);
+  }, [currentUser]);
 
   if (shouldLoad) {
     return (
@@ -101,45 +108,123 @@ export function Dashboard() {
               sx={{
                 p: 5,
                 mt: 5,
-                display: "flex",
+                display: {xs: "block", sm: "flex"},
                 justifyContent: "space-between",
               }}
             >
               <Box>
-                <Typography level="h1">Welcome, {uppercaseUserName}</Typography>
-                <Typography level="h1">current trip</Typography>
+                <Typography
+                sx={{
+                  fontSize: {xs: 30, sm: 40, md: 50},
+                  fontWeight: {xs: 700}
+                }}
+                >
+                  Welcome, {uppercaseUserName}
+                </Typography>
+                <Typography 
+                sx={{
+                  mb: {xs: 2, sm: 0},
+                  fontSize: {xs: 30, sm: 40, md: 50},
+                  fontWeight: {xs: 700}
+                }}
+                >
+                  Current Trip
+                </Typography>
               </Box>
               <form onSubmit={handleTripPicker}>
                 <FormControl>
-                <Select
-                  name="eventId"
-                  value={eventId}
-                  placeholder="Select a trip"
-                  onChange={e => setEventId(e.target.value)}
-                  indicator={<KeyboardArrowDown />}
-                  sx={{
-                    width: 240,
-                    [`& .${selectClasses.indicator}`]: {
-                      transition: "0.2s",
-                      [`&.${selectClasses.expanded}`]: {
-                        transform: "rotate(-180deg)",
+                  <Select
+                    color="primary"
+                    name='eventId'
+                    placeholder="Select a Trip"
+                    indicator={<KeyboardArrowDown />}
+                    sx={{
+                      width: {xs: "100%", sm: 240, lg: 400},
+                      [`& .${selectClasses.indicator}`]: {
+                        transition: "0.2s",
+                        [`&.${selectClasses.expanded}`]: {
+                          transform: "rotate(-180deg)",
+                        },
                       },
-                    },
-                  }}
-                >
-                  {allEvents.map(event => (
-                    <Option
-                    value={event.id}
-                    >
-                      {event.eventName}
-                    </Option>
-                  ))}
-                </Select>
-                <Button type="submit" fullWidth sx={{ mt: 2 }}>
-                  Select Trip
-                </Button>
+                    }}
+                  >
+                    {allEvents.map(event => (
+                      <Option
+                      name='eventId'
+                      key={event.id}
+                      value={event.id}
+                      >
+                        {event.eventName}
+                      </Option>
+                    ))}
+                  </Select>
+                  <Button type="submit" sx={{ mt: 2, width: {xs: "100%", sm: 240, lg: 400} }}>
+                    Select Trip
+                  </Button>
                 </FormControl>
               </form>
+            </Box>
+            {/* holds all the boxes */}
+            <Box sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: {xs:"column", md: "row"},
+              alignItems: "center",
+            }}>
+              {/* holds the buddies list box */}
+              <Box sx={{
+                flexGrow: 1,
+                display: "flex",
+                justifyContent: "center",
+                width: {xs: "100%", md: "auto"},
+                mb: {xs: 3, md: 0}
+              }}>
+                <Card sx={{
+                  width: "80%",
+                }}>
+                  <Typography sx={{
+                    fontSize: {xs: 25, sm: 30, md: 40}
+                  }}>
+                    Buddies List
+                  </Typography>
+                  {/* holds the icon and username */}
+                  {allUsers.filter(user => user.userName !== userName).map(user => (
+                  <Box 
+                  sx={{
+                    display: "flex",
+                    fontSize: {xs: 15, sm: 20, md: 30},
+                  }} key={user.id}>
+                    <Avatar sx={{mr:2}} variant="outlined" />
+                    {user.userName}
+                  </Box>
+                ))}
+                </Card>
+              </Box>
+              {/* holds the create trip and reminders */}
+              <Box sx={{
+                flexGrow: 2,
+                display: "flex",
+                gap: 2,
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+                width: {xs: "100%", md: "auto"},
+              }}>
+              <Card sx={{
+                width: "80%",
+              }}>
+
+              </Card>
+              <Card sx={{
+                width: "80%",
+              }}>
+                <Typography sx={{
+                  fontSize: {xs: 20, sm: 30, md: 40}
+                }}>
+                  Buddies List
+                </Typography>
+              </Card>
+              </Box>
             </Box>
           </Main>
         </Box>
