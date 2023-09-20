@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -29,18 +30,24 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", referencedColumnName = "id", nullable = false)
     private Event event;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expenseCreator_id", referencedColumnName = "id", nullable = false)
+    private User expenseCreator;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY)
+    private List<Balance> balances;
 
     private String title;
     private Double totalAmount;
 
     private Boolean isItemized;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY)
-    private List<UserExpense> userExpenses;
 
     @JsonIgnore
     @Column(updatable = false)
@@ -51,14 +58,7 @@ public class Expense {
 
     public Expense() {
     }
-
-    public List<UserExpense> getUserExpenses() {
-        return this.userExpenses;
-    }
-
-    public void setUserExpenses(List<UserExpense> userExpenses) {
-        this.userExpenses = userExpenses;
-    }
+    
 
     public Long getId() {
         return this.id;
@@ -74,6 +74,22 @@ public class Expense {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public User getExpenseCreator() {
+        return this.expenseCreator;
+    }
+
+    public void setExpenseCreator(User expenseCreator) {
+        this.expenseCreator = expenseCreator;
+    }
+
+    public List<Balance> getBalances() {
+        return this.balances;
+    }
+
+    public void setBalances(List<Balance> balances) {
+        this.balances = balances;
     }
 
     public String getTitle() {
@@ -119,6 +135,7 @@ public class Expense {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 
     @PrePersist
     protected void onCreate() {

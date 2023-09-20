@@ -43,10 +43,6 @@ public class Event implements Serializable {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    private List<Balance> balances;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private List<UserEvent> eventParticipants;
 
     @JsonManagedReference
@@ -54,7 +50,7 @@ public class Event implements Serializable {
     private List<Expense> expenses;
 
     @NotNull
-    @Size(min=2, message="need more than 2 chars")
+    @Size(min = 2, message = "need more than 2 chars")
     private String eventName;
 
     @Temporal(TemporalType.DATE)
@@ -78,30 +74,6 @@ public class Event implements Serializable {
         return user == null ? null : user.getId();
     }
 
-    public List<Expense> getExpenses() {
-        return this.expenses;
-    }
-
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
-    }
-
-    public List<UserEvent> getEventParticipants() {
-        return this.eventParticipants;
-    }
-
-    public void setEventParticipants(List<UserEvent> eventParticipants) {
-        this.eventParticipants = eventParticipants;
-    }
-
-    public List<Balance> getBalances() {
-        return this.balances;
-    }
-
-    public void setBalances(List<Balance> balances) {
-        this.balances = balances;
-    }
-
     public Long getId() {
         return this.id;
     }
@@ -116,6 +88,22 @@ public class Event implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<UserEvent> getEventParticipants() {
+        return this.eventParticipants;
+    }
+
+    public void setEventParticipants(List<UserEvent> eventParticipants) {
+        this.eventParticipants = eventParticipants;
+    }
+
+    public List<Expense> getExpenses() {
+        return this.expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 
     public String getEventName() {

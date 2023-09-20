@@ -47,62 +47,18 @@ public class User implements Serializable {
     private List<Event> events;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "owedToUser", fetch = FetchType.LAZY)
-    private List<Balance> balancesCredit;
+    @OneToMany(mappedBy = "expenseSharer", fetch = FetchType.LAZY)
+    private List<Balance> expenseSharer;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "owingUser", fetch = FetchType.LAZY)
-    private List<Balance> balancesDebt;
+    @OneToMany(mappedBy = "expenseCreator", fetch = FetchType.LAZY)
+    private List<Expense> expenseCreator;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserEvent> userEvents;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserExpense> userExpenses;
-
     public User() {
-    }
-
-    public List<UserExpense> getUserExpenses() {
-        return this.userExpenses;
-    }
-
-    public void setUserExpenses(List<UserExpense> userExpenses) {
-        this.userExpenses = userExpenses;
-    }
-
-    public List<UserEvent> getUserEvents() {
-        return this.userEvents;
-    }
-
-    public void setUserEvents(List<UserEvent> userEvents) {
-        this.userEvents = userEvents;
-    }
-
-    public List<Balance> getBalancesCredit() {
-        return this.balancesCredit;
-    }
-
-    public void setBalancesCredit(List<Balance> balancesCredit) {
-        this.balancesCredit = balancesCredit;
-    }
-
-    public List<Balance> getBalancesDebt() {
-        return this.balancesDebt;
-    }
-
-    public void setBalancesDebt(List<Balance> balancesDebt) {
-        this.balancesDebt = balancesDebt;
-    }
-
-    public List<Event> getEvents() {
-        return this.events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
     }
 
     public Long getId() {
@@ -151,6 +107,38 @@ public class User implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Event> getEvents() {
+        return this.events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public List<Balance> getExpenseSharer() {
+        return this.expenseSharer;
+    }
+
+    public void setExpenseSharer(List<Balance> expenseSharer) {
+        this.expenseSharer = expenseSharer;
+    }
+
+    public List<Expense> getExpenseCreator() {
+        return this.expenseCreator;
+    }
+
+    public void setExpenseCreator(List<Expense> expenseCreator) {
+        this.expenseCreator = expenseCreator;
+    }
+
+    public List<UserEvent> getUserEvents() {
+        return this.userEvents;
+    }
+
+    public void setUserEvents(List<UserEvent> userEvents) {
+        this.userEvents = userEvents;
     }
 
     @PrePersist

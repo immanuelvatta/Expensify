@@ -71,7 +71,7 @@ export function Dashboard() {
 
   useEffect(() => {
     if (!currentUser) {
-      navigate("/login");
+      navigate("/");
     } else if (currentUserEmail) {
       setShouldLoad(true);
     }
