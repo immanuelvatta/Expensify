@@ -27,8 +27,10 @@ import { Button } from "@mui/joy";
 import { MenuItem } from "@mui/joy";
 import { FormControl } from "@mui/joy"
 import Avatar from '@mui/joy/Avatar';
-const useEnhancedEffect =
-  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+import { CardCover, CardContent, AspectRatio } from "@mui/joy";
+import { extendTheme } from '@mui/joy/styles';
+
+const useEnhancedEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 export function Dashboard() {
   const status = useScript(`https://unpkg.com/feather-icons`);
@@ -41,6 +43,17 @@ export function Dashboard() {
   const firstLetter = userName.charAt(0).toUpperCase();
   const uppercaseUserName = firstLetter + userName.slice(1);
   
+  const theme = extendTheme({
+    colorSchemes: {
+      light: {
+        // This creates a 1px box-shadow.
+        shadowRing: '0 0 0 1px rgba(0 0 0 / 0.1)',
+      },
+      dark: {
+        shadowChannel: '0 0 0 1px rgba(11 107 203 / 0.65)',
+      },
+    },
+  });
 
   const handleTripPicker = e => {
     e.preventDefault();
@@ -66,6 +79,10 @@ export function Dashboard() {
       })
   }, []);
 
+  const createTrip = () => {
+    navigate("/event");
+  }
+
   useEffect(() => {
     getAllUsers()
     .then((users) => {
@@ -74,7 +91,7 @@ export function Dashboard() {
     .catch((error) => {
       console.log(error)
     })
-  }, [])
+  })
   
 
   useEffect(() => {
@@ -106,8 +123,8 @@ export function Dashboard() {
           <Main>
             <Box
               sx={{
-                p: 5,
-                mt: 5,
+                px: 10,
+                mt: 10,
                 display: {xs: "block", sm: "flex"},
                 justifyContent: "space-between",
               }}
@@ -120,15 +137,6 @@ export function Dashboard() {
                 }}
                 >
                   Welcome, {uppercaseUserName}
-                </Typography>
-                <Typography 
-                sx={{
-                  mb: {xs: 2, sm: 0},
-                  fontSize: {xs: 30, sm: 40, md: 50},
-                  fontWeight: {xs: 700}
-                }}
-                >
-                  Current Trip
                 </Typography>
               </Box>
               <form onSubmit={handleTripPicker}>
@@ -166,22 +174,31 @@ export function Dashboard() {
             </Box>
             {/* holds all the boxes */}
             <Box sx={{
+              mt: {xs: 0, sm: 1,  md: 10},
               display: "flex",
               justifyContent: "center",
               flexDirection: {xs:"column", md: "row"},
-              alignItems: "center",
             }}>
               {/* holds the buddies list box */}
               <Box sx={{
-                flexGrow: 1,
+                flexGrow: {md: 2, lg: 1},
                 display: "flex",
                 justifyContent: "center",
                 width: {xs: "100%", md: "auto"},
                 mb: {xs: 3, md: 0}
               }}>
-                <Card sx={{
-                  width: "80%",
-                }}>
+                <Card sx={(theme) => ({
+                    borderColor: "var(--joy-palette-primary-500, #0B6BCB)",
+                    width: "80%",
+                    boxShadow: theme.shadow.sm,
+                    transition: '0.2s',
+                    '--joy-shadowChannel': theme.vars.palette.primary.mainChannel,
+                    '--joy-shadowRing': 'inset 0 -3px 0 rgba(0 0 0 / 0.24)',
+                    '&:hover': {
+                      boxShadow: theme.shadow.xl,
+                      transform: 'translateY(-3px)',
+                    }
+                  })}>
                   <Typography sx={{
                     fontSize: {xs: 25, sm: 30, md: 40}
                   }}>
@@ -202,28 +219,100 @@ export function Dashboard() {
               </Box>
               {/* holds the create trip and reminders */}
               <Box sx={{
-                flexGrow: 2,
+                flexGrow: {md: 1, lg: 2},
                 display: "flex",
-                gap: 2,
-                justifyContent: "center",
                 flexDirection: "column",
                 alignItems: "center",
                 width: {xs: "100%", md: "auto"},
               }}>
-              <Card sx={{
-                width: "80%",
-              }}>
-
+                {/* create trip box */}
+                <Box
+                  onClick={createTrip}
+                  sx={{
+                    perspective: '1000px',
+                    width: "80%",
+                    mb: 5,
+                    transition: 'transform 0.4s',
+                    '& > div, & > div > div': {
+                      transition: 'inherit',
+                    },
+                    '&:hover': {
+                      cursor: "pointer",
+                      '& > div': {
+                        transform: 'rotateY(-10deg)',
+                        '& > div:nth-child(2)': {
+                          transform: 'scaleY(0.9) translate3d(0px, 10px, 20px)',
+                        },
+                        '& > div:nth-child(3)': {
+                          transform: 'translate3d(15px, 20px, 10px)',
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <Card
+                    variant="outlined"
+                    sx={{
+                      minHeight: {xs: '280px', md: "450px"},
+                      width: "100%",
+                      borderColor: '#000',
+                    }}
+                  >
+                    <AspectRatio minHeight="120px" maxHeight="400px">
+                    <img
+                      src="https://images.pexels.com/photos/163185/old-retro-antique-vintage-163185.jpeg"
+                      srcSet="https://images.pexels.com/photos/163185/old-retro-antique-vintage-163185.jpeg 2x"
+                      loading="lazy"
+                      alt=""
+                    />
+                  </AspectRatio>
+                  <Typography level="h2" fontSize="lg" textColor="var(--joy-palette-neutral-200, #DDE7EE)">
+                    Life is short, and the world is wide. You better get started.
+                  </Typography>
+                  <CardCover
+                    sx={{
+                      background:
+                        'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
+                      border: '1px solid',
+                      borderColor: 'var(--joy-palette-primary-500, #0B6BCB)',
+                      backdropFilter: 'blur(1px)',
+                      '&:hover': {
+                        display: "none"
+                      }
+                    }}
+                  >
+                  <Typography sx={{ fontSize: {xs: 30, sm: 40, md:50}}} fontSize="lg" textColor="#fff">
+                    Create a Trip!
+                  </Typography>
+                  </CardCover>
+                  <CardContent
+                    sx={{
+                      alignItems: 'self-end',
+                      justifyContent: 'flex-end',
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.3))',
+                      border: '1px solid',
+                      borderColor: '#000',
+                      backdropFilter: 'blur(1px)',
+                    }}
+                  >
+                </CardContent>
               </Card>
-              <Card sx={{
-                width: "80%",
-              }}>
-                <Typography sx={{
-                  fontSize: {xs: 20, sm: 30, md: 40}
+            </Box>
+                <Card sx={{
+                  width: "80%",
                 }}>
-                  Buddies List
-                </Typography>
-              </Card>
+                  <Typography sx={{
+                    fontSize: {xs: 20, sm: 30, md: 40}
+                  }}>
+                    Balance Reminders
+                  </Typography>
+                  <Divider/>
+                  <Typography sx={{
+                    fontSize: {xs: 20, sm: 30, md: 40}
+                  }}>
+                    I don't know what to put here haha
+                  </Typography>
+                </Card>
               </Box>
             </Box>
           </Main>
