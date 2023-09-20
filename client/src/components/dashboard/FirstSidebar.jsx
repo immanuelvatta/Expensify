@@ -11,8 +11,10 @@ import { openSidebar, closeSidebar } from '../../utils/utils';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import LogoSVG from '../../assets/Logo';
 import { Typography } from '@mui/joy';
+import {useNavigate} from "react-router-dom";
 
 export default function FirstSidebar() {
+  const navigate = useNavigate();
   return (
     <Sheet
       className="FirstSidebar"
@@ -61,7 +63,7 @@ export default function FirstSidebar() {
       <LogoSVG width={40} height={40} color={"darkgray"} sx={{ mb:0 }}/>
       <List sx={{ '--ListItem-radius': '8px', '--List-gap': '12px' }}>
         <ListItem>
-          <ListItemButton>
+          <ListItemButton selected onClick={() => navigate('/dashboard')}>
             <i data-feather="home" />
           </ListItemButton>
         </ListItem>
@@ -71,7 +73,7 @@ export default function FirstSidebar() {
           </ListItemButton>
         </ListItem>
         <ListItem>
-          <ListItemButton onClick={() => openSidebar()}>
+          <ListItemButton onClick={() => navigate('/invite/buddies')}>
             <i data-feather="user-plus" />
           </ListItemButton>
         </ListItem>
@@ -81,7 +83,7 @@ export default function FirstSidebar() {
           </ListItemButton>
         </ListItem>
         <ListItem>
-          <ListItemButton selected onClick={() => openSidebar()}>
+          <ListItemButton onClick={() => openSidebar()}>
             <i data-feather="bar-chart-2" />
           </ListItemButton>
         </ListItem>
@@ -111,7 +113,7 @@ export default function FirstSidebar() {
           </ListItemButton>
         </ListItem>
       </List>
-      <Avatar variant="outlined" src="/static/images/avatar/3.jpg" />
+      <Avatar variant="outlined"/>
     </Sheet>
   );
 }
