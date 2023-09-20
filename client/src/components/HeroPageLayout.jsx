@@ -1,10 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Container from "@mui/joy/Container";
+import { useTheme } from "@mui/material/styles";
+import { useMediaQuery } from "@mui/material";
 import { typographyClasses } from "@mui/joy/Typography";
 
 export default function HeroPageLayout({ children, reversed }) {
+  const theme = useTheme();
+  const [bgImgString, setBgImgString] = useState(
+    "https://images.pexels.com/photos/106152/euro-coins-currency-money-106152.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  );
+  const [imgArr, setImgArr] = useState([]);
+  const [bgImageIdx, setBgImageIdx] = useState(0);
+
+  const getRandIdx = () => {
+    return Math.floor(Math.random() * imgArr.length);
+  };
+
+  useEffect(() => {
+    const getImage = async (image = "cash", numImage = 15) => {
+      const url = `https://api.pexels.com/v1/search?query=${image}&per_page=${numImage}`;
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: import.meta.env.VITE_PEXELS_API_KEY,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 200) {
+          const data = await response.json();
+          setImgArr(data.photos);
+        } else {
+          console.error(await response.json());
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getImage();
+  }, []);
+
+  useEffect(() => {
+    if (imgArr.length > 0) {
+      const interval = setInterval(() => {
+        let newIdx = getRandIdx();
+        while (newIdx === bgImageIdx) {
+          newIdx = getRandIdx();
+        }
+        setBgImageIdx(newIdx);
+        setTimeout(() => {
+          setBgImageIdx(newIdx);
+          setBgImgString(imgArr[newIdx].src.original);
+        }, 750);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [bgImageIdx, imgArr]);
+
+  const isXsScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const isLgScreen = useMediaQuery(theme.breakpoints.up("lg"));
+
+  let aspectRatio, maxHeight;
+
+  if (isXsScreen) {
+    aspectRatio = 700 / 520;
+    maxHeight = 700;
+  } else if (isMdScreen) {
+    aspectRatio = 600 / 400;
+    maxHeight = 400;
+  } else if (isLgScreen) {
+    // Set aspect ratio and maxHeight for lg screens
+    aspectRatio = 800 / 600;
+    maxHeight = 600;
+  }
+
   return (
     <Container
       sx={(theme) => ({
@@ -15,11 +89,11 @@ export default function HeroPageLayout({ children, reversed }) {
         alignItems: "center",
         py: 10,
         gap: 4,
-        [theme.breakpoints.up(834)]: {
+        [theme.breakpoints.up("md")]: {
           flexDirection: "row",
           gap: 6,
         },
-        [theme.breakpoints.up(1199)]: {
+        [theme.breakpoints.up("lg")]: {
           gap: 12,
         },
       })}
@@ -33,7 +107,7 @@ export default function HeroPageLayout({ children, reversed }) {
           maxWidth: "50ch",
           textAlign: "center",
           flexShrink: 999,
-          [theme.breakpoints.up(834)]: {
+          [theme.breakpoints.up("md")]: {
             minWidth: 420,
             alignItems: "flex-start",
             textAlign: "initial",
@@ -46,28 +120,19 @@ export default function HeroPageLayout({ children, reversed }) {
         {children}
       </Box>
       <AspectRatio
-        ratio={600 / 520}
+        ratio={aspectRatio}
         variant="outlined"
-        maxHeight={300}
-        sx={(theme) => ({
+        maxHeight={maxHeight}
+        sx={{
           minWidth: 300,
-          alignSelf: "stretch",
-          [theme.breakpoints.up(834)]: {
-            alignSelf: "initial",
-            flexGrow: 1,
-            "--AspectRatio-maxHeight": "520px",
-            "--AspectRatio-minHeight": "400px",
-          },
-          borderRadius: "sm",
-          bgcolor: "background.level2",
+          backgroundImage: `url(${bgImgString})`,
+          backgroundSize: "contain",
+          borderRadius: "lg",
+          bgcolor: "background.level3",
           flexBasis: "50%",
-        })}
-      >
-        <img
-          src="https://images.unsplash.com/photo-1610375461246-83df859d849d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
-          alt=""
-        />
-      </AspectRatio>
+          transition: "background-image 5s ease-out"
+        }}
+      ></AspectRatio>
     </Container>
   );
 }

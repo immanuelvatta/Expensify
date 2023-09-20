@@ -47,7 +47,7 @@ export function Invitation({ children }) {
 
   useEffect(() => {
     if (!currentUser) {
-      navigate("/login");
+      navigate("/");
     } else if (currentUserEmail) {
       setShouldLoad(true);
     }

@@ -15,7 +15,7 @@ const Home = () => {
     setCurrentUser(null);
     setCurrentUserEmail(null);
     localStorage.clear();
-    navigate("/login");
+    navigate("/bwiv");
   };
 
   const createEvent = () => {
