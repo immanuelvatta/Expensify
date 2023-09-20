@@ -23,7 +23,7 @@ export default function FirstSidebar() {
       sx={{
         position: {
           xs: 'fixed',
-          md: 'sticky',
+          // md: 'sticky',
         },
         transform: {
           xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
