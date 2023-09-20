@@ -28,18 +28,13 @@ public class Balance {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", referencedColumnName = "id", nullable = false)
-    private Event event;
+    @JoinColumn(name = "expense_id", referencedColumnName = "id", nullable = false)
+    private Expense expense;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owing_user_id", referencedColumnName = "id", nullable = false)
-    private User owingUser;
-
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owed_to_user_id", referencedColumnName = "id", nullable = false)
-    private User owedToUser;
+    @JoinColumn(name = "expense_sharer_id", referencedColumnName = "id", nullable = false)
+    private User expenseSharer;
 
     private Double amount;
 
@@ -52,6 +47,7 @@ public class Balance {
     public Balance() {
     }
 
+
     public Long getId() {
         return this.id;
     }
@@ -60,28 +56,20 @@ public class Balance {
         this.id = id;
     }
 
-    public Event getEvent() {
-        return this.event;
+    public Expense getExpense() {
+        return this.expense;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setExpense(Expense expense) {
+        this.expense = expense;
     }
 
-    public User getOwingUser() {
-        return this.owingUser;
+    public User getExpenseSharer() {
+        return this.expenseSharer;
     }
 
-    public void setOwingUser(User owingUser) {
-        this.owingUser = owingUser;
-    }
-
-    public User getOwedToUser() {
-        return this.owedToUser;
-    }
-
-    public void setOwedToUser(User owedToUser) {
-        this.owedToUser = owedToUser;
+    public void setExpenseSharer(User expenseSharer) {
+        this.expenseSharer = expenseSharer;
     }
 
     public Double getAmount() {
@@ -107,6 +95,7 @@ public class Balance {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+    
 
     @PrePersist
     protected void onCreate() {
