@@ -1,19 +1,33 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext"
-import { getUserByEmail } from "../../services/userService";
 import { useNavigate, Link } from "react-router-dom";
 import { Box, Typography, Card } from "@mui/joy";
-import { capitalize } from "lodash";
 import { Divider } from "@mui/joy";
 import { Chip } from "@mui/joy";
 import CardContent from "@mui/joy/CardContent";
 import { Button } from "@mui/joy";
+import { getUserByEmail } from "../../services/userService";
+import { getAllTripBuddies } from "../../services/userEventService";
+import { useParams } from "react-router-dom";
+import { startCase } from "lodash";
 
 export function OneTrip() {
+  const [ allBuddies, setAllBuddies ] = useState([]);
   const { currentUser, currentUserEmail } = useContext(AuthContext);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    getAllTripBuddies(id)
+      .then((buddies) => {
+        setAllBuddies(buddies)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, [])
 
   useEffect(() => {
     getUserByEmail(currentUserEmail)
@@ -47,7 +61,7 @@ export function OneTrip() {
             fontWeight: { xs: 700 },
             ml: { xs: 5, md: 0 },
           }}>
-            Welcome, {capitalize(userName)}
+            Welcome, {startCase(userName)}
           </Typography>
         </Box>
         {/* Box the contains the lower page */}
@@ -72,6 +86,9 @@ export function OneTrip() {
                     Add a Buddy
                   </Chip>
                 </Divider>
+                {allBuddies.map(buddy => (
+                  <Typography>{startCase(buddy.userName)}</Typography>
+                ))}
                 <Button>Add a Buddy</Button>
               </CardContent>
             </Card>
@@ -94,6 +111,7 @@ export function OneTrip() {
                       Add Expense
                     </Chip>
                   </Divider>
+                  <Button onClick={() => navigate(`/expense/${id}`)}>Add an Expense</Button>
                 </CardContent>
               </Card>
             </Box>

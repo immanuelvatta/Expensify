@@ -21,4 +21,17 @@ async function createUserEvent(userEvent) {
     }
 }
 
-export { createUserEvent }
+async function getAllTripBuddies(id) {
+    try {
+        const res = await http.get(`/events/tripBuddies`, {
+            params: {
+                id
+            }
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export { createUserEvent, getAllTripBuddies }

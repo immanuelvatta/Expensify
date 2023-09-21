@@ -1,10 +1,12 @@
 package com.bwiv.expensify.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,9 +20,10 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
+@JsonSerialize
 @Entity
 @Table(name = "balances")
-public class Balance {
+public class Balance implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

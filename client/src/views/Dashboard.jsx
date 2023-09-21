@@ -40,12 +40,12 @@ export function Dashboard() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const formJson = Object.fromEntries(formData.entries());
-    navigate(`/trip/${formJson.eventId}`)
+    navigate(`/event/${formJson.eventId}`)
   };
 
   useEffect(() => {
     getUserByEmail(currentUserEmail)
-      .then((user) => {
+      .then((user) => { 
         setUserName(user.userName);
         setAllEvents(user.events);
       })
@@ -66,7 +66,7 @@ export function Dashboard() {
       .catch((error) => {
         console.log(error)
       })
-  })
+  }, [])
 
   useEffect(() => {
     if (!currentUser) {
