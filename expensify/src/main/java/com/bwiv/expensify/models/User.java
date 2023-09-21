@@ -50,7 +50,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "expenseSharer", fetch = FetchType.LAZY)
     private List<Balance> expenseSharer;
 
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "expenseCreator", fetch = FetchType.LAZY)
     private List<Expense> expenseCreator;
 

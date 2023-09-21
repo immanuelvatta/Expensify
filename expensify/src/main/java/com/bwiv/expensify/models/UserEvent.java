@@ -1,10 +1,14 @@
 package com.bwiv.expensify.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,25 +22,25 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
+
+@JsonSerialize
 @Entity
 @Table(name = "user_events")
-public class UserEvent {
+public class UserEvent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "invited_user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", referencedColumnName = "id", nullable = false)
     private Event event;
-
-    private Boolean isConfirmed;
 
     @Column(updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -45,6 +49,16 @@ public class UserEvent {
     private Date updatedAt;
 
     public UserEvent() {
+    }
+
+    @JsonProperty
+    public Long getUserId() {
+        return user == null ? null : user.getId();
+    }
+
+    @JsonProperty
+    public Long getEventId() {
+        return event == null ? null : event.getId();
     }
 
     public Long getId() {
@@ -69,18 +83,6 @@ public class UserEvent {
 
     public void setEvent(Event event) {
         this.event = event;
-    }
-
-    public Boolean isIsConfirmed() {
-        return this.isConfirmed;
-    }
-
-    public Boolean getIsConfirmed() {
-        return this.isConfirmed;
-    }
-
-    public void setIsConfirmed(Boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
     }
 
     public Date getCreatedAt() {
@@ -109,4 +111,14 @@ public class UserEvent {
         this.updatedAt = new Date();
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", user='" + getUser() + "'" +
+            ", event='" + getEvent() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", updatedAt='" + getUpdatedAt() + "'" +
+            "}";
+    }
 }
