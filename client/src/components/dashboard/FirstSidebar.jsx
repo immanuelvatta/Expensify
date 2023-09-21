@@ -131,7 +131,7 @@ export default function FirstSidebar() {
       >
         <Tooltip title="Light/Dark Theme" arrow placement="right-end" color="primary" variant={variant}>
           <ListItem>
-              <ColorSchemeToggle sx={{ display: { xs: "none", md: "inline-flex" } }} />
+            <ColorSchemeToggle sx={{ display: { xs: "none", md: "inline-flex" } }} />
           </ListItem>
         </Tooltip>
         <Tooltip title="About-Us" arrow placement="right-end" color="primary" variant={variant}>
@@ -157,7 +157,9 @@ export default function FirstSidebar() {
         </Tooltip>
       </List>
       <Tooltip title={currentUserEmail} arrow placement="right-end" color="primary" variant={variant}>
-        <Avatar alt={capitalize(currentUserEmail)} variant="outlined" />
+        <Avatar sx={theme => ({
+          backgroundColor: "primary.outlinedBorder",
+        })} alt={capitalize(currentUserEmail)} variant="outlined" />
       </Tooltip>
     </Sheet>
   );

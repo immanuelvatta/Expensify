@@ -14,6 +14,7 @@ import { AuthContext } from "./context/authContext";
 import Header from "./components/dashboard/Header";
 import { OneBuddy } from "./views/OneBuddy";
 import {OneTrip} from "./views/OneTrip";
+import OneExpense from "./views/OneExpense";
 
 const useEnhancedEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
@@ -65,7 +66,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/invite/buddies" element={<Invitation />} />
           <Route path="/buddy/:id" element={<OneBuddy />} />
-          <Route path="/trip/:id" element={<OneTrip />} />
+          <Route path="/event/:id" element={<OneTrip />} />
+          <Route path="/expense/:id" element={<OneExpense />} />
         </Routes>
       </BrowserRouter>
     </CssVarsProvider>

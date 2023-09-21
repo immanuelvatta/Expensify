@@ -4,6 +4,17 @@ const http = axios.create({
     baseURL: 'http://localhost:8080/api'
 })
 
+//! dont change this 
+async function getUserByUserId(id) {
+    try{
+        const res = await http.get(`/users/id/id?id=${id}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 async function createUser(user) {
     // eslint-disable-next-line no-useless-catch
     try {
@@ -17,17 +28,12 @@ async function createUser(user) {
 
 async function getUserByEmail(email) {
     try {
-        const res = await http.get(`/users/email/email?email=${email}`);
-        return res.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
-
-async function getUserByUserId(id) {
-    try{
-        const res = await http.get(`/users/id/id?id=${id}`);
+        const res = await http.get(`/users/email`
+        , {
+            params: { 
+                email
+            }
+        });
         return res.data;
     } catch (error) {
         console.log(error);
@@ -37,7 +43,11 @@ async function getUserByUserId(id) {
 
 async function getUserByUserName(userName) {
     try{
-        const res = await http.get(`/users/userName/userName?userName=${userName}`);
+        const res = await http.get(`/users/userName`, {
+            params: {
+                userName
+            }
+        });
         return res.data;
     } catch (error) {
         console.log(error);

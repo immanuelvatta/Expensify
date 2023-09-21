@@ -35,4 +35,8 @@ public class UserService {
     public User getUserByUsername(String userName) {
         return userRepository.findByUsername(userName);
     }
+
+    public List<User> getUsersByEventId(Long id) {
+        return userRepository.getAllUsersByEventId(id);
+    }
 }
