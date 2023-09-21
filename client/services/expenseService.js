@@ -14,17 +14,3 @@ async function getAllEvents() {
         throw error;
     }
 }
-
-async function createEvent(event) {
-    // eslint-disable-next-line no-useless-catch
-    try {
-        const res = await http.post('/events', event);
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-}
-
-
-
-export { getAllEvents, createEvent }

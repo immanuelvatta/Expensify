@@ -19,4 +19,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE user_name = :userName", nativeQuery = true)
     User findByUsername(String userName);
+
+    @Query(value = "SELECT users.* from users join expensify.user_events WHERE users.id = user_events.invited_user_id AND user_events.event_id = :id", nativeQuery = true)
+    List<User> getAllUsersByEventId(Long id);
+
 }
