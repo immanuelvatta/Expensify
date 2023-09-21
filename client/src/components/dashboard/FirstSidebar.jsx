@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext, useState } from "react";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import Avatar from "@mui/joy/Avatar";
 import List from "@mui/joy/List";
@@ -14,10 +14,12 @@ import { Typography } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import Tooltip from "@mui/joy/Tooltip";
+import { capitalize } from "lodash";
 
 export default function FirstSidebar() {
+  const [variant, setVariant] = useState('outlined');
   const navigate = useNavigate();
-  const { setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
+  const { currentUserEmail, setCurrentUser, setCurrentUserEmail } = useContext(AuthContext);
 
   const logout = () => {
     setCurrentUser(null);
@@ -72,67 +74,91 @@ export default function FirstSidebar() {
       </IconButton>
       <LogoSVG width={40} height={40} color={"darkgray"} sx={{ mb: 0 }} />
       <List sx={{ "--ListItem-radius": "8px", "--List-gap": "12px" }}>
-        <ListItem>
-          <ListItemButton selected onClick={() => navigate("/dashboard")}>
-            <i data-feather="home" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => openSidebar()}>
-            <i data-feather="grid" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => navigate("/invite/buddies")}>
-            <i data-feather="user-plus" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => openSidebar()}>
-            <i data-feather="calendar" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => openSidebar()}>
-            <i data-feather="bar-chart-2" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => openSidebar()}>
-            <i data-feather="users" />
-          </ListItemButton>
-        </ListItem>
+        <Tooltip title="Dashboard" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton selected onClick={() => navigate("/dashboard")}>
+              <i data-feather="home" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="All Trips" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton onClick={() => openSidebar()}>
+              <i data-feather="grid" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Invite Buddies" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton onClick={() => navigate("/invite/buddies")}>
+              <i data-feather="user-plus" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Create Event" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton onClick={() => navigate("/event")}>
+              <i data-feather="calendar" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Balance" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton onClick={() => openSidebar()}>
+              <i data-feather="bar-chart-2" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Add Buddy" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton onClick={() => openSidebar()}>
+              <i data-feather="users" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
       </List>
       <List
         sx={{
           mt: "auto",
-          flexGrow: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "end",
+
           "--ListItem-radius": "8px",
           "--List-gap": "8px",
         }}
       >
-        <ColorSchemeToggle
-          sx={{ display: { xs: "none", md: "inline-flex" } }}
-        />
-        <Tooltip title="About-Us" arrow>
+        <Tooltip title="Light/Dark Theme" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+              <ColorSchemeToggle sx={{ display: { xs: "none", md: "inline-flex" } }} />
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="About-Us" arrow placement="right-end" color="primary" variant={variant}>
           <ListItem>
             <ListItemButton>
               <i data-feather="at-sign" />
             </ListItemButton>
           </ListItem>
         </Tooltip>
-        <ListItem>
-          <ListItemButton>
-            <i data-feather="settings" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={logout}>
-            <i data-feather="log-out"  />
-          </ListItemButton>
-        </ListItem>
+        <Tooltip title="Settings" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton>
+              <i data-feather="settings" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Logout" arrow placement="right-end" color="primary" variant={variant}>
+          <ListItem>
+            <ListItemButton onClick={logout}>
+              <i data-feather="log-out" />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
       </List>
-      <Avatar variant="outlined" />
+      <Tooltip title={currentUserEmail} arrow placement="right-end" color="primary" variant={variant}>
+        <Avatar alt={capitalize(currentUserEmail)} variant="outlined" />
+      </Tooltip>
     </Sheet>
   );
 }

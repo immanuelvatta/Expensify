@@ -12,6 +12,8 @@ import FirstSidebar from "./components/dashboard/FirstSidebar";
 import { useScript } from "./utils/useScript";
 import { AuthContext } from "./context/authContext";
 import Header from "./components/dashboard/Header";
+import { OneBuddy } from "./views/OneBuddy";
+import {OneTrip} from "./views/OneTrip";
 
 const useEnhancedEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
@@ -62,6 +64,8 @@ function App() {
           <Route path="/event" element={<CreateEvent />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/invite/buddies" element={<Invitation />} />
+          <Route path="/buddy/:id" element={<OneBuddy />} />
+          <Route path="/trip/:id" element={<OneTrip />} />
         </Routes>
       </BrowserRouter>
     </CssVarsProvider>

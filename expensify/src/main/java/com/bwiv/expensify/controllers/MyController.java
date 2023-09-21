@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bwiv.expensify.models.Event;
 import com.bwiv.expensify.models.User;
+import com.bwiv.expensify.models.UserEvent;
 import com.bwiv.expensify.services.EventService;
+import com.bwiv.expensify.services.UserEventService;
 import com.bwiv.expensify.services.UserService;
 
 import jakarta.validation.Valid;
@@ -30,6 +33,9 @@ public class MyController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserEventService userEventService;
 
     @GetMapping("/api/events")
     public List<Event> index() {
@@ -73,11 +79,24 @@ public class MyController {
         return ResponseEntity.ok().body(newEvent);
     }
 
+    
+    @PostMapping("/api/userEvents")
+    public ResponseEntity<Object> createUserEvents(@Valid @ModelAttribute("userEvent") UserEvent userEvent, BindingResult result) {
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(userEvent);
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        if(result.hasErrors()) {
+            return ResponseEntity.status(400).body(result.getAllErrors()); 
+        }
+        UserEvent newUserEvent = userEventService.createUserEvent(userEvent);
+        return ResponseEntity.ok().body(newUserEvent);
+    }
+
     @PostMapping("/api/users")
     public User createUser(@ModelAttribute("newUser") User newUser) {
         return userService.createUser(newUser);
     }
-    
+
     // @PostMapping("/api/users")
     // public User createUser(
     //     @RequestParam String uid, 
@@ -99,4 +118,20 @@ public class MyController {
     public User getByUserName(@RequestParam String userName) {
         return userService.getUserByUsername(userName);
     }
+
+    @GetMapping("/api/users/id/{id}")
+    public User getByUserName(@RequestParam Long id) {
+        return userService.getUserById(id);
+    }
+    
+
+    // @PostMapping("/api/userEvents")
+    // public ResponseEntity<Object> createUserEvents(@RequestBody UserEvent newUserEvent) {
+    //     System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    //     System.out.println(newUserEvent);
+    //     System.out.println(newUserEvent.getUserId());
+    //     System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    //     userEventService.createUserEvent(newUserEvent);
+    //     return ResponseEntity.ok().body(newUserEvent);
+    // }
 }
