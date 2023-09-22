@@ -48,7 +48,13 @@ Coming Soon!!!
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![heroPage](https://github.com/immanuelvatta/Expensify/assets/129477252/92976ccb-44fd-4ebe-ba50-c720c15c043f)
+![signupPage](https://github.com/immanuelvatta/Expensify/assets/129477252/f4ffccc3-37b5-4d4c-9bdb-1a9b1e0c65ed)
+![loginPage](https://github.com/immanuelvatta/Expensify/assets/129477252/ea1c8d36-660f-47d7-8cd2-de74f71d5eec)
+![dashboardPage](https://github.com/immanuelvatta/Expensify/assets/129477252/0cca8c60-5205-4dce-8f31-9770e9539ecc)
+![createEventPage](https://github.com/immanuelvatta/Expensify/assets/129477252/75bfdd19-b8b1-466f-aeee-4475e0836964)
+![inviteFriendPage](https://github.com/immanuelvatta/Expensify/assets/129477252/e11b6b1b-0169-45cb-aaa0-c186345272e2)
+
 
 
 ## Run Locally
