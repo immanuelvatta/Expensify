@@ -16,6 +16,8 @@ import { OneBuddy } from "./views/OneBuddy";
 import {OneTrip} from "./views/OneTrip";
 import OneExpense from "./views/OneExpense";
 
+
+
 const useEnhancedEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 

@@ -46,7 +46,7 @@ const SignUp = () => {
             localStorage.setItem("uid", data.user.uid);
             setCurrentUserEmail(data.user.email);
             localStorage.setItem("email", data.user.email);
-            navigate("/home");
+            navigate("/dashboard");
           } catch (error) {
             navigate("/login");
           }
@@ -100,7 +100,7 @@ const SignUp = () => {
         formData.append("userName", userName);
         formData.append("email", email);
         createUser(formData);
-        navigate("/home");
+        navigate("/dashboard");
       } catch (err) {
         console.log("Failed to send it to the db", err);
       }

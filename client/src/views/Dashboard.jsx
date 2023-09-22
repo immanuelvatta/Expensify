@@ -115,7 +115,7 @@ export function Dashboard() {
                   },
                 }}
               >
-                {allEvents.map(event => (
+                {allEvents && allEvents.map(event => (
                   <Option
                     name='eventId'
                     key={event.id}

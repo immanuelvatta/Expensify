@@ -42,13 +42,13 @@ const Login = () => {
           formData.append("userName", data.user.displayName);
           formData.append("email", data.user.email);
           createUser(formData);
-          navigate("/home");
+          navigate("/dashboard");
         } else {
           setCurrentUser(data.user.uid);
           localStorage.setItem("uid", data.user.uid);
           setCurrentUserEmail(data.user.email);
           localStorage.setItem("email", data.user.email);
-          navigate("/home");
+          navigate("/dashboard");
         }
       })
       .catch((error) => {
@@ -72,7 +72,7 @@ const Login = () => {
         localStorage.setItem("uid", userCredential.user.uid);
         setCurrentUserEmail(userCredential.user.email);
         localStorage.setItem("email", userCredential.user.email);
-        navigate("/home");
+        navigate("/dashboard");
       })
       .catch((err) => {
         setError(
@@ -84,7 +84,7 @@ const Login = () => {
 
   useEffect(() => {
     if (currentUser) {
-      navigate("/home");
+      navigate("/dashboard");
     } else {
       setShouldLoad(true);
     }
