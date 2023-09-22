@@ -170,4 +170,8 @@ public class MyController {
         return userService.getUsersByEventId(id);
     }
     
+    @GetMapping("api/trip/expenses")
+    public List<Expense> getAllExpensesForTrip(@RequestParam(value = "id") Long id){
+        return eventService.getExpensesByEventId(id);
+    }
 }
