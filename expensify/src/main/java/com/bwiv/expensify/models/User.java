@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+// import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+
 
 @Entity
 @Table(name = "users")
