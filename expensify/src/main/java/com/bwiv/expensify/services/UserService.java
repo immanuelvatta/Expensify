@@ -3,13 +3,13 @@ package com.bwiv.expensify.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Service;
 
-import com.bwiv.expensify.models.Expense;
+
 import com.bwiv.expensify.models.User;
-import com.bwiv.expensify.models.UserEvent;
-import com.bwiv.expensify.repositories.EventRepository;
+
+
 import com.bwiv.expensify.repositories.UserRepository;
 
 @Service

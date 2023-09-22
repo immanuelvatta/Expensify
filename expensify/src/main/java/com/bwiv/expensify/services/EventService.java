@@ -23,7 +23,5 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public List<Expense> getExpensesByEventId(Long id) {
-        return eventRepository.getExpensesByEventId(id);
-    }
+    
 }

@@ -23,4 +23,8 @@ public class ExpenseService {
     public Expense createExpense(Expense expense) {
         return expenseRepository.save(expense);
     }
+
+    public List<Expense> getExpensesByEventId(Long id) {
+        return expenseRepository.getExpensesByEventId(id);
+    }
 }

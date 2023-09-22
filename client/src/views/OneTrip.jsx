@@ -10,14 +10,22 @@ import { getUserByEmail } from "../../services/userService";
 import { getAllTripBuddies } from "../../services/userEventService";
 import { useParams } from "react-router-dom";
 import { startCase } from "lodash";
+import { getAllExpensesForEvent } from "../../services/expenseService";
+import Avatar from '@mui/joy/Avatar';
 
 export function OneTrip() {
-  const [ allBuddies, setAllBuddies ] = useState([]);
+  const [allBuddies, setAllBuddies] = useState([]);
   const { currentUser, currentUserEmail } = useContext(AuthContext);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [userName, setUserName] = useState("");
+  const [expenses, setExpenses] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
+  
+  const USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
 
   useEffect(() => {
     getAllTripBuddies(id)
@@ -28,6 +36,16 @@ export function OneTrip() {
         console.log(error);
       })
   }, [])
+
+  useEffect(() => {
+    getAllExpensesForEvent(id)
+      .then((expense) => {
+        setExpenses(expense)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, []);
 
   useEffect(() => {
     getUserByEmail(currentUserEmail)
@@ -68,67 +86,83 @@ export function OneTrip() {
         <Box sx={{
           mt: { xs: 10, md: 5 },
           px: { xs: 5, md: 15 },
-          display: {sm: "Block", md: "flex"},
-          justifyContent: {sm: "start", md: "center"},
-          gap: {sm: 0, md: 10} 
+          display: { sm: "Block", md: "flex" },
+          justifyContent: { sm: "start", md: "center" },
+          gap: { sm: 0, md: 10 }
         }}>
           {/* the one that contains the left box */}
-          <Box sx={{
-
+          <Card sx={{
+            p: 3,
+            flexGrow: 2,
           }}>
-            <Card>
-              <CardContent>
-                <Typography sx={{ fontSize: 25, fontWeight: 700 }}>
-                  Buddies List
-                </Typography>
-                <Divider sx={{ '--Divider-childPosition': '85%' }}>
-                  <Chip variant="soft" color="neutral" size="sm">
-                    Add a Buddy
-                  </Chip>
-                </Divider>
-                {allBuddies.map(buddy => (
-                  <Typography>{startCase(buddy.userName)}</Typography>
-                ))}
-                <Button>Add a Buddy</Button>
-              </CardContent>
-            </Card>
-          </Box>
+            <CardContent>
+              <Typography sx={{
+                fontSize: { xs: 30, sm: 35, md: 40 },
+                fontWeight: 700
+              }}>
+                Buddies List
+              </Typography>
+              <Divider sx={{ '--Divider-childPosition': '85%' }}>
+                <Chip variant="soft" color="neutral" size="sm">
+                  Add a Buddy
+                </Chip>
+              </Divider>
+              {allBuddies.map(buddy => (
+                <Typography startDecorator={<Avatar variant="outlined" size="lg" />} sx={{
+                  fontSize: { xs: 20, sm: 20, md: 30 },
+                  mt: 3
+                }}>{startCase(buddy.userName)}</Typography>
+              ))}
+              <Button variant="outlined" size="lg" sx={{ mt: 2 }}>Add a Buddy</Button>
+            </CardContent>
+          </Card>
           {/* the div that contains the right 2 boxes */}
-          <Box sx={{
-            display: {lg: "flex"},
-            gap: {lg: 10},
-            mt: { xs: 5, md: 0 }
+          {/* the expenses box */}
+          <Card sx={{
+            p: 3,
+            flexGrow: 2,
+            mt: { xs: 3, md: 0 }
           }}>
-            {/* the expenses box */}
-            <Box>
-              <Card>
-                <CardContent>
-                  <Typography sx={{ fontSize: 25, fontWeight: 700 }}>
-                    Expenses
-                  </Typography>
-                  <Divider sx={{ '--Divider-childPosition': '85%' }}>
-                    <Chip variant="soft" color="neutral" size="sm">
-                      Add Expense
-                    </Chip>
-                  </Divider>
-                  <Button onClick={() => navigate(`/expense/${id}`)}>Add an Expense</Button>
-                </CardContent>
-              </Card>
-            </Box>
-            {/* the balance box */}
-            <Box sx={{
-              mt: { xs: 5, lg: 0 }
-            }}>
-              <Card>
-                <CardContent>
-                  <Typography sx={{ fontSize: 25, fontWeight: 700 }}>
-                    Balance Reminders
-                  </Typography>
-                  <Divider sx={{mt:1}}/>
-                </CardContent>
-              </Card>
-            </Box>
-          </Box>
+            <CardContent>
+              <Typography sx={{ fontSize: 25, fontWeight: 700 }}>
+                Expenses
+              </Typography>
+              <Divider sx={{ '--Divider-childPosition': '85%', }}>
+                <Chip variant="soft" color="neutral" size="sm">
+                  Add Expense
+                </Chip>
+              </Divider>
+              {expenses.map(expense => (
+                <Box display={{
+                  display: "flex",
+                  justifyContent: "space-between"
+                }}>
+                  <Typography sx={{
+                    fontSize: { xs: 20, sm: 20, md: 25 }
+                  }}>{startCase(expense.expenseName)}</Typography>
+                  <Typography key={expense.id}>{USDollar.format(expense.expenseAmount)}</Typography>
+                </Box>
+
+              ))}
+              <Button onClick={() => navigate(`/expense/${id}`)} variant="outlined" size="lg">Add an Expense</Button>
+            </CardContent>
+          </Card>
+          {/* the balance box */}
+          <Card sx={{
+            p: 3,
+            flexGrow: 1,
+            mt: { xs: 3, md: 0 }
+          }}>
+            <CardContent>
+              <Typography sx={{
+                fontSize: 25,
+                fontWeight: 700,
+              }}>
+                Balance Reminders
+              </Typography>
+              <Divider sx={{ mt: 1 }} />
+            </CardContent>
+          </Card>
         </Box>
       </Box>
     )

@@ -12,6 +12,5 @@ import com.bwiv.expensify.models.Expense;
 public interface EventRepository extends CrudRepository<Event, Long> {
     List<Event> findAll();
 
-    @Query(value = "select expenses.* from events join expensify.expenses where events.id = expenses.event_id and events.id = :id;", nativeQuery = true)
-    List<Expense> getExpensesByEventId(Long id);
+
 }

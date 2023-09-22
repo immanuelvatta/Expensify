@@ -164,7 +164,7 @@ public class MyController {
     // userEventService.createUserEvent(newUserEvent);
     // return ResponseEntity.ok().body(newUserEvent);
     // }
-
+    
     @GetMapping("/api/events/tripBuddies")
     public List<User> getAllTripBuddies(@RequestParam(value = "id") Long id) {
         return userService.getUsersByEventId(id);
@@ -172,6 +172,9 @@ public class MyController {
     
     @GetMapping("api/trip/expenses")
     public List<Expense> getAllExpensesForTrip(@RequestParam(value = "id") Long id){
-        return eventService.getExpensesByEventId(id);
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(id);
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        return expenseService.getExpensesByEventId(id);
     }
 }

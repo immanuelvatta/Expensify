@@ -24,21 +24,39 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Avatar from '@mui/joy/Avatar';
+import { getAllExpensesForEvent, createExpense } from "../../services/expenseService";
 
 
 function OneExpense() {
+  const [expenseList, setExpenseList] = useState([]);
   const [allBuddies, setAllBuddies] = useState([]);
   const [loading, setLoading] = useState(false);
   const { currentUser, currentUserEmail } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [expenseAmount, setExpenseAmount] = useState(0);
   const [buddySelector, setBuddySelector] = useState("");
   const [shouldLoad, setShouldLoad] = useState(false);
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
   const { id } = useParams();
+
+  const USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  useEffect(() => {
+    console.log("the id is ", id);
+    getAllExpensesForEvent(id)
+      .then((res) => {
+        setExpenseList(res.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, [id])
 
   useEffect(() => {
     getUserByEmail(currentUserEmail)
@@ -63,9 +81,24 @@ function OneExpense() {
   const closeAlert = () => {
     setSuccess(false);
   }
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try{
+      const userObj = await getUserByEmail(currentUserEmail);
+      const formData = new FormData();
+      formData.append("expenseAmount", expenseAmount );
+      formData.append("expenseName", title );
+      formData.append("event", id );
+      formData.append("expenseCreator", userObj.id)
+      console.log(formData);
+      await createExpense(formData)
+      setExpenseAmount("");
+      setTitle("");
+      navigate(0);
+    }catch(error){
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -102,6 +135,20 @@ function OneExpense() {
           display: "flex",
           justifyContent: "center"
         }}>
+          <Box>
+            {expenseList && expenseList.map(expense => (
+              <Box display={{
+                display: "flex",
+                justifyContent: "space-between"
+              }}>
+                <Typography sx={{
+                  fontSize: { xs: 20, sm: 20, md: 25 }
+                }}>{startCase(expense.expenseName)}</Typography>
+                <Typography key={expense.id}>{USDollar.format(expense.expenseAmount)}</Typography>
+              </Box>
+
+            ))}
+          </Box>
           <Card variant="soft" sx={(theme) => ({
             width: { xs: 350, sm: 600, lg: 800 },
             mt: 10,
@@ -136,62 +183,62 @@ function OneExpense() {
 
               </Typography>
               <form onSubmit={handleSubmit}>
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <FormControl required sx={{ flexGrow: 1, mr: 2 }}>
+                <Box sx={{ display: { xs: "block", md: "flex" }, justifyContent: "center", gap: { md: 2 } }}>
+                  <FormControl required sx={{ flexGrow: 1, }} size="lg">
+
                     <FloatingLabelInput
                       type="text"
                       label="Expense Name"
                       name="title"
                       placeholder="Enter Item"
-                      onChange={() => setTitle(e.target.value)}
+                      onChange={(e) => setTitle(e.target.value)}
                     />
                   </FormControl>
-                  <FormControl required sx={{ flexGrow: 1 }}>
+                  <FormControl required sx={{ flexGrow: 1, mt: { xs: 2, md: 0 }, }} size="lg">
                     <FloatingLabelInput
-                      type="number"
+                      type="text"
                       label="Amount"
-                      name="totalAmount"
+                      name="expenseAmount"
                       placeholder="Total amount"
-                      onChange={() => setTotalAmount(e.target.value)}
+                      onChange={(e) => setExpenseAmount(e.target.value)}
                     />
                   </FormControl>
                 </Box>
                 <Box sx={{
-                  display: "flex"
+                  display: { xs: "block", md: "flex" },
+                  mt: 2,
+                  gap: 2,
                 }}>
                   <Select
+                    fullWidth
                     color="primary"
                     name='userId'
                     size="lg"
                     placeholder="Select Buddy"
                     indicator={<KeyboardArrowDown />}
-                    onChange={() => setBuddySelector(e.target)}
+                    onChange={(e) => setBuddySelector(e.target)}
                     sx={{
-                      flex:1,
-                      width: { xs: "100%", sm: 240, lg: 400 },
+                      width: { xs: "auto", sm: 580, lg: 790 },
                       [`& .${selectClasses.indicator}`]: {
                         transition: "0.2s",
                         [`&.${selectClasses.expanded}`]: {
                           transform: "rotate(-180deg)",
                         },
                       },
+                      flexGrow: 2,
                     }}
                   >
                     {allBuddies.map(buddy => (
                       <Option name='userId' key={buddy.id} value={buddy.id}>
-                        
-                          <Avatar alt={startCase(buddy.userName)} sx={theme => ({
-                    backgroundColor: "primary.outlinedBorder" ,
-                   mr:2})}/>{startCase(buddy.userName)}
-                        
+                        {startCase(buddy.userName)}
+
                       </Option>
                     ))}
                   </Select>
-                  <Button type="submit" fullWidth sx={{
+                  <Button type="submit" fullWidth size="lg" variant="solid" sx={{
                     textAlign: "start",
-                    mt: 3,
-                    mb: 3,
-                    flex:1
+                    flexGrow: 1,
+                    mt: { xs: 2, md: 0 }
                   }}>
                     Add an Expense
                   </Button>
