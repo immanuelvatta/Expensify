@@ -126,7 +126,7 @@ export default function HeroPageLayout({ children, reversed }) {
         sx={{
           minWidth: 300,
           backgroundImage: `url(${bgImgString})`,
-          backgroundSize: "contain",
+          backgroundSize: "cover",
           borderRadius: "lg",
           bgcolor: "background.level3",
           flexBasis: "50%",

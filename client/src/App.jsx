@@ -15,6 +15,7 @@ import Header from "./components/dashboard/Header";
 import { OneBuddy } from "./views/OneBuddy";
 import {OneTrip} from "./views/OneTrip";
 import OneExpense from "./views/OneExpense";
+import ContactUs from "./views/ContactUs";
 
 
 
@@ -70,6 +71,7 @@ function App() {
           <Route path="/buddy/:id" element={<OneBuddy />} />
           <Route path="/event/:id" element={<OneTrip />} />
           <Route path="/expense/:id" element={<OneExpense />} />
+          <Route path="/contactus" element={<ContactUs />} />
         </Routes>
       </BrowserRouter>
     </CssVarsProvider>

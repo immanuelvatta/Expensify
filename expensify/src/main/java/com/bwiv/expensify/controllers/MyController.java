@@ -106,9 +106,9 @@ public class MyController {
 
     @PostMapping("/api/expenses")
     public ResponseEntity<Object> createExpense(@Valid @ModelAttribute("expense") Expense expense, BindingResult result){
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(expense);
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        // System.out.println(expense);
+        // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         if(result.hasErrors()){
             return ResponseEntity.status(400).body(result.getAllErrors());
         }
@@ -118,6 +118,9 @@ public class MyController {
     
     @PostMapping("/api/balance")
     public ResponseEntity<Object> createBalance(@Valid @ModelAttribute("balance") Balance balance, BindingResult result){
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(balance);
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         if(result.hasErrors()){
             return ResponseEntity.status(400).body(result.getAllErrors());
         }
