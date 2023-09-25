@@ -25,6 +25,7 @@ import Select, { selectClasses } from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Avatar from '@mui/joy/Avatar';
 import { getAllExpensesForEvent, createExpense } from "../../services/expenseService";
+import { createBalance } from "../../services/balanceService";
 
 
 function OneExpense() {
@@ -81,25 +82,41 @@ function OneExpense() {
   const closeAlert = () => {
     setSuccess(false);
   }
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
+    let newExpense;
+    try {
       const userObj = await getUserByEmail(currentUserEmail);
-      const formData = new FormData();
-      formData.append("expenseAmount", expenseAmount );
-      formData.append("expenseName", title );
-      formData.append("event", id );
-      formData.append("expenseCreator", userObj.id)
-      console.log(formData);
-      await createExpense(formData)
-      setExpenseAmount("");
-      setTitle("");
-      navigate(0);
-    }catch(error){
+      const expFormData = new FormData();
+      expFormData.append("expenseAmount", expenseAmount);
+      expFormData.append("expenseName", title);
+      expFormData.append("event", id);
+      expFormData.append("expenseCreator", userObj.id)
+      // console.log(expFormData);
+      newExpense = await createExpense(expFormData)
+      // console.log(newExpense);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      // const newNewFormData = new FormData(buddySelector)
+      // const buddyJson = Object.fromEntries(newNewFormData.entries());.
+      const budId = buddySelector;
+      console.log("buddy ID:", budId);
+      // console.log(buddyJson);
+      const balFormData = new FormData();
+      balFormData.append("expenseSharer", budId)
+      balFormData.append("amount", expenseAmount)
+      balFormData.append("expense", newExpense.id)
+      console.log(balFormData);
+      await createBalance(balFormData);
+    } catch (error) {
       console.log(error);
     }
   };
+
+
 
   useEffect(() => {
     if (!currentUser) {
@@ -212,11 +229,15 @@ function OneExpense() {
                   <Select
                     fullWidth
                     color="primary"
+                    value={buddySelector}
                     name='userId'
                     size="lg"
                     placeholder="Select Buddy"
                     indicator={<KeyboardArrowDown />}
-                    onChange={(e) => setBuddySelector(e.target)}
+                    onChange={(e, newValue) => {
+                      // console.log(e.target.value, newValue);
+                      setBuddySelector(newValue)
+                    }}
                     sx={{
                       width: { xs: "auto", sm: 580, lg: 790 },
                       [`& .${selectClasses.indicator}`]: {
@@ -228,9 +249,10 @@ function OneExpense() {
                       flexGrow: 2,
                     }}
                   >
+                    <Option value={"hi!!!!"}>Im here</Option>
                     {allBuddies.map(buddy => (
                       <Option name='userId' key={buddy.id} value={buddy.id}>
-                        {startCase(buddy.userName)}
+                        {startCase(buddy.userName)} {buddy.id}
 
                       </Option>
                     ))}

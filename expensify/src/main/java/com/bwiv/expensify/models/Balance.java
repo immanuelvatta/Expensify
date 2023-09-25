@@ -109,4 +109,18 @@ public class Balance implements Serializable {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", expense='" + getExpense() + "'" +
+            ", expenseSharer='" + getExpenseSharer() + "'" +
+            ", amount='" + getAmount() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", updatedAt='" + getUpdatedAt() + "'" +
+            "}";
+    }
+    
 }

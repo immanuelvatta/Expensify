@@ -134,9 +134,9 @@ export default function FirstSidebar() {
             <ColorSchemeToggle sx={{ display: { xs: "none", md: "inline-flex" } }} />
           </ListItem>
         </Tooltip>
-        <Tooltip title="About-Us" arrow placement="right-end" color="primary" variant={variant}>
+        <Tooltip title="Contact-Us" arrow placement="right-end" color="primary" variant={variant}>
           <ListItem>
-            <ListItemButton>
+            <ListItemButton onClick={() => navigate("/contactus")}>
               <i data-feather="at-sign" />
             </ListItemButton>
           </ListItem>
