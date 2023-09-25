@@ -72,6 +72,8 @@ export default function Contact() {
           <Typography
             level="title-md"
             sx={{
+              fontSize: 34,
+              fontWeight: 700,
               textAlign: "start",
               mt: 2,
               mb: 2,
@@ -90,7 +92,9 @@ export default function Contact() {
                 value={contactForm.name}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }}>
               <FloatingLabelInput
                 type="email"
                 label="Email"
@@ -100,7 +104,9 @@ export default function Contact() {
                 value={contactForm.email}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }}>
               <FloatingLabelInput
                 type="tel"
                 label="Phone Number"
@@ -110,7 +116,9 @@ export default function Contact() {
                 value={contactForm.phoneNumber}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }}>
               <FloatingLabelInput
                 type="text"
                 label="Subject"
@@ -120,7 +128,9 @@ export default function Contact() {
                 value={contactForm.subject}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }}>
               <FloatingLabelInput
                 type="text"
                 label="Message"
