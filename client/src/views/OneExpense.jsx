@@ -27,7 +27,7 @@ function OneExpense() {
   const [title, setTitle] = useState("");
   const [expenseAmount, setExpenseAmount] = useState(0);
   const [buddySelector, setBuddySelector] = useState("");
-  const [eventObj, setEventObj] = useState({});
+  const [eventName, setEventName] = useState("");
   const [shouldLoad, setShouldLoad] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -40,8 +40,7 @@ function OneExpense() {
   useEffect(() => {
     getEventById(id)
       .then((event) => {
-        setEventObj(event)
-        console.log(event);
+        setEventName(event.eventName)
       })
       .catch((error) => {
         console.log(error);
@@ -163,11 +162,11 @@ function OneExpense() {
             <CardContent>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography level="h1">
-                  {eventObj}
+                  {eventName}
                 </Typography>
               </Box>
               <Typography level="h2" sx={{ mt: 4 }}>
-                Total Cost ||
+                Total Cost of Expenses 
               </Typography>
 
               <Typography

@@ -179,7 +179,7 @@ export function OneTrip() {
                 fontSize: 25,
                 fontWeight: 700,
               }}>
-                Balance Reminders
+                Balances
               </Typography>
               <Divider sx={{ mt: 1 }} />
             </CardContent>
