@@ -29,6 +29,7 @@ function OneExpense() {
   const [buddySelector, setBuddySelector] = useState("");
   const [eventName, setEventName] = useState("");
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [expenseTotal, setExpenseTotal] = useState(0);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -47,10 +48,19 @@ function OneExpense() {
       })
   }, [])
 
+  const getTotal = () => {
+    let total = 0;
+    for (const expense of expenseList) {
+      total += expense.expenseAmount;
+    }
+    setExpenseTotal(total);
+  }
+
   useEffect(() => {
     getAllExpensesForEvent(id)
       .then((expenses) => {
         setExpenseList(expenses)
+        getTotal();
       })
       .catch((error) => {
         console.log(error);
@@ -146,9 +156,14 @@ function OneExpense() {
                   {eventName}
                 </Typography>
               </Box>
-              <Typography level="h2" sx={{ mt: 3 }}>
-                Total Cost of Expenses
-              </Typography>
+              <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                <Typography level="h2" sx={{ mt: 3 }}>
+                  Total Cost of Expenses
+                </Typography>
+                <Typography level="h2" sx={{ mt: 3 }}>
+                {USDollar.format(expenseTotal)}
+                </Typography>
+              </Box>
               <Box sx={{my:3}}>
                 {expenseList && expenseList.map(expense => (
                   <Box display={{
