@@ -7,7 +7,6 @@ const http = axios.create({
 })
 
 async function getAllExpensesForEvent(id) {
-    console.log(id);
     try {
         const res = await http.get(`/trip/expenses`, {
             params: {

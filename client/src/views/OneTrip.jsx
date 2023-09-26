@@ -108,10 +108,16 @@ export function OneTrip() {
                 </Chip>
               </Divider>
               {allBuddies.map(buddy => (
-                <Typography startDecorator={<Avatar variant="outlined" size="lg" />} sx={{
+                <Typography 
+                startDecorator={<Avatar variant="outlined" size="lg" />} 
+                key={buddy.id} 
+                sx={{
                   fontSize: { xs: 20, sm: 20, md: 30 },
                   mt: 3
-                }}>{startCase(buddy.userName)}</Typography>
+                }}
+                >
+                  {startCase(buddy.userName)}
+                </Typography>
               ))}
               <Button variant="outlined" size="lg" sx={{ mt: 2 }}>Add a Buddy</Button>
             </CardContent>
@@ -123,28 +129,43 @@ export function OneTrip() {
             flexGrow: 2,
             mt: { xs: 3, md: 0 }
           }}>
-            <CardContent>
-              <Typography sx={{ fontSize: 25, fontWeight: 700 }}>
-                Expenses
-              </Typography>
-              <Divider sx={{ '--Divider-childPosition': '85%', }}>
-                <Chip variant="soft" color="neutral" size="sm">
-                  Add Expense
-                </Chip>
-              </Divider>
+            <CardContent sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between"
+            }}>
+              <Box>
+                <Typography sx={{ fontSize: 25, fontWeight: 700 }}>
+                  Expenses
+                </Typography>
+                <Divider sx={{ '--Divider-childPosition': '85%', mb:3 }}>
+                  <Chip variant="soft" color="neutral" size="sm">
+                    Add Expense
+                  </Chip>
+                </Divider>
               {expenses.map(expense => (
                 <Box display={{
                   display: "flex",
-                  justifyContent: "space-between"
+                  justifyContent: "space-between",
+                  alignItems: "center"
                 }}>
                   <Typography sx={{
-                    fontSize: { xs: 20, sm: 20, md: 25 }
+                    fontSize: { xs: 20, sm: 20, md: 25 },
                   }}>{startCase(expense.expenseName)}</Typography>
                   <Typography key={expense.id}>{USDollar.format(expense.expenseAmount)}</Typography>
                 </Box>
-
               ))}
-              <Button onClick={() => navigate(`/expense/${id}`)} variant="outlined" size="lg">Add an Expense</Button>
+              </Box>
+              <Box sx={{display: "flex", width: "100%", mt: 3}}>
+                <Button
+                  onClick={() => navigate(`/expense/${id}`)}
+                  variant="outlined"
+                  size="lg"
+                  fullWidth
+                >
+                  Add an Expense
+                </Button>
+              </Box>
             </CardContent>
           </Card>
           {/* the balance box */}

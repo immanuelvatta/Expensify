@@ -1,49 +1,54 @@
-import { useState, useRef } from "react";
-import ArrowForward from "@mui/icons-material/ArrowForward";
+import { useState, useRef, useEffect } from "react";
 import HeroPageLayout from "../components/HeroPageLayout";
 import { Link as RouterLink } from "react-router-dom";
 import { Link, CardContent, Typography, Button, FormControl, Card } from "@mui/joy"
-import AspectRatio from "@mui/joy/AspectRatio";
 import FloatingLabelInput from "../components/InputText";
 import CardOverflow from "@mui/joy/CardOverflow";
 import emailjs from "@emailjs/browser";
 
 export default function Contact() {
-  const formRef = useRef();
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    subject: '',
-    message: '',
-  });
+  const [message, setMessage] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(0);
+  const [subject, setSubject] = useState("");
+  const [templateParams, setTemplateParams] = useState({});
 
-  const sendEmail = (e) => {
-    emailjs.sendForm(import.meta.env.VITE_EMAILJS_SERVICE_CONTACT_ID, import.meta.env.VITE_EMAILJS_TEMPLATE_ID, formRef.current, import.meta.env.VITE_EMAILJS_PUBLIC_CONTACT_KEY)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!name || !email || !phoneNumber || !subject || !message) {
+      console.log("Please enter every field in the form");
+      return;
+    }
+    setTemplateParams({
+      message,
+      name,
+      email,
+      phoneNumber,
+      subject
+    });
+    console.log(templateParams);
+  }
+
+  useEffect(() => {
+    if (Object.keys(templateParams).length > 0) {
+      sendEmail();
+    }
+  }, [templateParams]);
+  
+  const sendEmail = () => {
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID, 
+      import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT_ID,
+      templateParams,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      )
       .then((result) => {
         console.log(result.text, "Status is 200");
       }, (error) => {
         console.log(error.text);
       });
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    sendEmail(e)
-    setContactForm({
-      name: '',
-      email: '',
-      phoneNumber: '',
-      subject: '',
-      message: '',
-    })
   }
-  const onChangeHandler = (e) => {
-    const { name, value } = e.target
-    setContactForm((prev) =>
-      ({ ...prev, [name]: value }))
-  }
-
 
   return (
     <HeroPageLayout>
@@ -72,6 +77,8 @@ export default function Contact() {
           <Typography
             level="title-md"
             sx={{
+              fontSize: 34,
+              fontWeight: 700,
               textAlign: "start",
               mt: 2,
               mb: 2,
@@ -79,55 +86,64 @@ export default function Contact() {
           >
             Get in Touch
           </Typography>
-          <form onSubmit={handleSubmit} ref={formRef}>
-            <FormControl >
+          <form onSubmit={handleSubmit}>
+            <FormControl required>
               <FloatingLabelInput
                 type="text"
+                id="name"
                 label="Name"
                 name="name"
                 placeholder="Enter your name"
-                onChange={onChangeHandler}
-                value={contactForm.name}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }}>
               <FloatingLabelInput
                 type="email"
                 label="Email"
                 name="email"
                 placeholder="Enter your email"
-                onChange={onChangeHandler}
-                value={contactForm.email}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }} required>
               <FloatingLabelInput
                 type="tel"
                 label="Phone Number"
                 name="phoneNumber"
                 placeholder="Enter your phone number"
-                onChange={onChangeHandler}
-                value={contactForm.phoneNumber}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }} required>
               <FloatingLabelInput
                 type="text"
                 label="Subject"
                 name="subject"
                 placeholder="Enter the Subject"
-                onChange={onChangeHandler}
-                value={contactForm.subject}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
               />
             </FormControl>
-            <FormControl >
+            <FormControl sx={{
+              mt: 2
+            }} required>
               <FloatingLabelInput
                 type="text"
                 label="Message"
                 name="message"
                 placeholder="Leave your message"
-                onChange={onChangeHandler}
-                value={contactForm.message}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               />
             </FormControl>
             <Button type="submit" fullWidth sx={{

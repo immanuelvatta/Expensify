@@ -157,6 +157,11 @@ public class MyController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/api/events/id")
+    public Event getEventById(@RequestParam(value = "id") Long id) {
+        return eventService.getEventByEventId(id);
+    } 
+
     // @PostMapping("/api/userEvents")
     // public ResponseEntity<Object> createUserEvents(@RequestBody UserEvent
     // newUserEvent) {
