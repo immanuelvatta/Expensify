@@ -54,29 +54,6 @@ public class MyController {
         return userService.allUsers();
     }
 
-    // @PostMapping("/api/events")
-    // public Event create(
-    // @RequestParam String eventName,
-    // @RequestParam String description,
-    // @RequestParam String eventDate,
-    // @RequestParam Long userId) {
-    // User user = userService.getUserById(userId);
-    // Event event = new Event();
-    // event.setEventName(eventName);
-    // event.setDescription(description);
-    // / Creates a local date obj
-    // LocalDate localDate = LocalDate.parse(eventDate);
-    // / getting timezone of the computer thats currently running
-    // ZoneId defaultZoneId = ZoneId.systemDefault();
-    // / make a date assuming the day started in this time zone
-    // Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-    // sets it to a date
-    // event.setEventDate(date);
-    // event.setUser(user);
-
-    // return eventService.createEvent(event);
-    // }
-
     @PostMapping("/api/events")
     public ResponseEntity<Object> create(@Valid @ModelAttribute("event") Event event, BindingResult result) {
         if (result.hasErrors()) {
@@ -88,10 +65,7 @@ public class MyController {
 
     @PostMapping("/api/userEvents")
     public ResponseEntity<Object> createUserEvents(@Valid @ModelAttribute("userEvent") UserEvent userEvent,
-            BindingResult result) {
-        // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        // System.out.println(userEvent);
-        // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(400).body(result.getAllErrors());
         }
@@ -106,52 +80,32 @@ public class MyController {
 
     @PostMapping("/api/expenses")
     public ResponseEntity<Object> createExpense(@Valid @ModelAttribute("expense") Expense expense, BindingResult result){
-        // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        // System.out.println(expense);
-        // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         if(result.hasErrors()){
-            return ResponseEntity.status(400).body(result.getAllErrors());
+        return ResponseEntity.status(400).body(result.getAllErrors());
         }
-        Expense newExpense = expenseService.createExpense(expense);
-        return ResponseEntity.ok().body(newExpense);
+    Expense newExpense = expenseService.createExpense(expense);
+    return ResponseEntity.ok().body(newExpense);
     }
     
     @PostMapping("/api/balance")
     public ResponseEntity<Object> createBalance(@Valid @ModelAttribute("balance") Balance balance, BindingResult result){
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(balance);
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         if(result.hasErrors()){
             return ResponseEntity.status(400).body(result.getAllErrors());
         }
         Balance newBalance = balanceService.createBalance(balance);
         return ResponseEntity.ok().body(newBalance);
     }
-
-
-
-    // @PostMapping("/api/users")
-    // public User createUser(
-    // @RequestParam String uid,
-    // @RequestParam String userName,
-    // @RequestParam String email) {
-    // User user = new User();
-    // user.setUid(uid);
-    // user.setUserName(userName);
-    // user.setEmail(email);
-    // return userService.createUser(user);
-    // }
-
+    
     @GetMapping("/api/users/email")
     public User getByEmail(@RequestParam(value = "email") String email) {
         return userService.getUserByEmail(email);
     }
-
+    
     @GetMapping("/api/users/userName")
     public User getByUserName(@RequestParam(value = "userName") String userName) {
         return userService.getUserByUsername(userName);
     }
-
+    
     @GetMapping("/api/users/id/{id}")
     public User getByUserId(@RequestParam Long id) {
         return userService.getUserById(id);
@@ -160,18 +114,7 @@ public class MyController {
     @GetMapping("/api/events/id")
     public Event getEventById(@RequestParam(value = "id") Long id) {
         return eventService.getEventByEventId(id);
-    } 
-
-    // @PostMapping("/api/userEvents")
-    // public ResponseEntity<Object> createUserEvents(@RequestBody UserEvent
-    // newUserEvent) {
-    // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    // System.out.println(newUserEvent);
-    // System.out.println(newUserEvent.getUserId());
-    // System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    // userEventService.createUserEvent(newUserEvent);
-    // return ResponseEntity.ok().body(newUserEvent);
-    // }
+    }
     
     @GetMapping("/api/events/tripBuddies")
     public List<User> getAllTripBuddies(@RequestParam(value = "id") Long id) {
@@ -180,9 +123,29 @@ public class MyController {
     
     @GetMapping("api/trip/expenses")
     public List<Expense> getAllExpensesForTrip(@RequestParam(value = "id") Long id){
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(id);
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         return expenseService.getExpensesByEventId(id);
     }
 }
+
+// @PostMapping("/api/events")
+// public Event create(
+// @RequestParam String eventName,
+// @RequestParam String description,
+// @RequestParam String eventDate,
+// @RequestParam Long userId) {
+// User user = userService.getUserById(userId);
+// Event event = new Event();
+// event.setEventName(eventName);
+// event.setDescription(description);
+// / Creates a local date obj
+// LocalDate localDate = LocalDate.parse(eventDate);
+// / getting timezone of the computer thats currently running
+// ZoneId defaultZoneId = ZoneId.systemDefault();
+// / make a date assuming the day started in this time zone
+// Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+// sets it to a date
+// event.setEventDate(date);
+// event.setUser(user);
+
+// return eventService.createEvent(event);
+// }

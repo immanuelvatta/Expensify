@@ -50,6 +50,9 @@ public class Balance implements Serializable {
     public Balance() {
     }
 
+    public Long getUserId() {
+        return expenseSharer == null ? null : expenseSharer.getId();
+    }
 
     public Long getId() {
         return this.id;
