@@ -1,5 +1,5 @@
 import axios from "axios";
-import { cloneDeep } from "lodash";
+
 
 
 const http = axios.create({
@@ -7,7 +7,6 @@ const http = axios.create({
 })
 
 async function getAllExpensesForEvent(id) {
-    console.log(id);
     try {
         const res = await http.get(`/trip/expenses`, {
             params: {
@@ -22,12 +21,13 @@ async function getAllExpensesForEvent(id) {
 
 async function createExpense(expense){
     try {
-        const res = await http.post(`/expenses`, expense);
-        return res.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
+        const expRes = await http.post(`/expenses`, expense);
+        return expRes.data;
+    } catch (expError) {
+        console.log("Error adding expense", expError);
+        throw expError;
     }
 }
+
 
 export { getAllExpensesForEvent, createExpense } 

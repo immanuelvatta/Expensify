@@ -50,6 +50,9 @@ public class Balance implements Serializable {
     public Balance() {
     }
 
+    public Long getUserId() {
+        return expenseSharer == null ? null : expenseSharer.getId();
+    }
 
     public Long getId() {
         return this.id;
@@ -109,4 +112,18 @@ public class Balance implements Serializable {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", expense='" + getExpense() + "'" +
+            ", expenseSharer='" + getExpenseSharer() + "'" +
+            ", amount='" + getAmount() + "'" +
+            ", createdAt='" + getCreatedAt() + "'" +
+            ", updatedAt='" + getUpdatedAt() + "'" +
+            "}";
+    }
+    
 }

@@ -75,46 +75,34 @@ export default function FirstSidebar() {
       <LogoSVG width={40} height={40} color={"darkgray"} sx={{ mb: 0 }} />
       <List sx={{ "--ListItem-radius": "8px", "--List-gap": "12px" }}>
         <Tooltip title="Dashboard" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ListItemButton selected onClick={() => navigate("/dashboard")}>
-              <i data-feather="home" />
-            </ListItemButton>
-          </ListItem>
+          <ListItemButton onClick={() => navigate("/dashboard")}>
+            <i data-feather="home" />
+          </ListItemButton>
         </Tooltip>
         <Tooltip title="All Trips" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ListItemButton onClick={() => openSidebar()}>
-              <i data-feather="grid" />
-            </ListItemButton>
-          </ListItem>
+          <ListItemButton onClick={() => openSidebar()}>
+            <i data-feather="grid" />
+          </ListItemButton>
         </Tooltip>
         <Tooltip title="Invite Buddies" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ListItemButton onClick={() => navigate("/invite/buddies")}>
-              <i data-feather="user-plus" />
-            </ListItemButton>
-          </ListItem>
+          <ListItemButton onClick={() => navigate("/invite/buddies")}>
+            <i data-feather="user-plus" />
+          </ListItemButton>
         </Tooltip>
         <Tooltip title="Create Event" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ListItemButton onClick={() => navigate("/event")}>
-              <i data-feather="calendar" />
-            </ListItemButton>
-          </ListItem>
+          <ListItemButton onClick={() => navigate("/event")}>
+            <i data-feather="calendar" />
+          </ListItemButton>
         </Tooltip>
         <Tooltip title="Balance" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ListItemButton onClick={() => openSidebar()}>
-              <i data-feather="bar-chart-2" />
-            </ListItemButton>
-          </ListItem>
+          <ListItemButton onClick={() => openSidebar()}>
+            <i data-feather="bar-chart-2" />
+          </ListItemButton>
         </Tooltip>
         <Tooltip title="Add Buddy" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ListItemButton onClick={() => openSidebar()}>
-              <i data-feather="users" />
-            </ListItemButton>
-          </ListItem>
+          <ListItemButton onClick={() => openSidebar()}>
+            <i data-feather="users" />
+          </ListItemButton>
         </Tooltip>
       </List>
       <List
@@ -130,13 +118,11 @@ export default function FirstSidebar() {
         }}
       >
         <Tooltip title="Light/Dark Theme" arrow placement="right-end" color="primary" variant={variant}>
-          <ListItem>
-            <ColorSchemeToggle sx={{ display: { xs: "none", md: "inline-flex" } }} />
-          </ListItem>
+          <ColorSchemeToggle sx={{ display: { xs: "none", md: "inline-flex" } }} />
         </Tooltip>
-        <Tooltip title="About-Us" arrow placement="right-end" color="primary" variant={variant}>
+        <Tooltip title="Contact-Us" arrow placement="right-end" color="primary" variant={variant}>
           <ListItem>
-            <ListItemButton>
+            <ListItemButton onClick={() => navigate("/contactus")}>
               <i data-feather="at-sign" />
             </ListItemButton>
           </ListItem>
