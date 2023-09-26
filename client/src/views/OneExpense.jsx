@@ -48,19 +48,18 @@ function OneExpense() {
       })
   }, [])
 
-  const getTotal = () => {
+  useEffect(() => {
     let total = 0;
     for (const expense of expenseList) {
       total += expense.expenseAmount;
     }
     setExpenseTotal(total);
-  }
+  }, [expenseList]);
 
   useEffect(() => {
     getAllExpensesForEvent(id)
       .then((expenses) => {
         setExpenseList(expenses)
-        getTotal();
       })
       .catch((error) => {
         console.log(error);
