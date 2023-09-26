@@ -15,6 +15,21 @@ async function getAllEvents() {
     }
 }
 
+async function getEventById(id) {
+    try {
+        const res = await http.get(`/events/id`, {
+            params: {
+                id
+            }
+        })
+        
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 async function createEvent(event) {
     // eslint-disable-next-line no-useless-catch
     try {
@@ -27,4 +42,4 @@ async function createEvent(event) {
 
 
 
-export { getAllEvents, createEvent }
+export { getAllEvents, createEvent, getEventById }

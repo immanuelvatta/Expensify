@@ -164,7 +164,7 @@ export function Dashboard() {
                 Buddy Suggestions
               </Typography>
               {/* holds the icon and username */}
-              {allUsers.filter(user => user.userName !== userName).map(user => (
+              {allUsers.filter((user, idx) => user.userName !== userName).map(user => (
                 <Box key={user.id}>
                   <Link to={`/buddy/${user.id}`}>
                     <Box sx={{ display: "flex", alignItems: "center", fontSize: { xs: 15, sm: 20, md: 30 }, }}>
