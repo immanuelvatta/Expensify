@@ -49,8 +49,8 @@ function OneExpense() {
 
   useEffect(() => {
     getAllExpensesForEvent(id)
-      .then((res) => {
-        setExpenseList(res.data)
+      .then((expenses) => {
+        setExpenseList(expenses)
       })
       .catch((error) => {
         console.log(error);
@@ -123,29 +123,10 @@ function OneExpense() {
         }}>
           Welcome, {startCase(userName)}
         </Typography>
-        <Typography sx={{
-          fontSize: { xs: 30, sm: 40, md: 50 },
-          fontWeight: { xs: 700 },
-        }}>
-          Invite a Friend
-        </Typography>
         <Box sx={{
           display: "flex",
           justifyContent: "center"
         }}>
-          <Box>
-            {expenseList && expenseList.map(expense => (
-              <Box display={{
-                display: "flex",
-                justifyContent: "space-between"
-              }}>
-                <Typography sx={{
-                  fontSize: { xs: 20, sm: 20, md: 25 }
-                }}>{startCase(expense.expenseName)}</Typography>
-                <Typography key={expense.id}>{USDollar.format(expense.expenseAmount)}</Typography>
-              </Box>
-            ))}
-          </Box>
           <Card variant="soft" sx={(theme) => ({
             width: { xs: 350, sm: 600, lg: 800 },
             mt: 10,
@@ -165,20 +146,27 @@ function OneExpense() {
                   {eventName}
                 </Typography>
               </Box>
-              <Typography level="h2" sx={{ mt: 4 }}>
-                Total Cost of Expenses 
+              <Typography level="h2" sx={{ mt: 3 }}>
+                Total Cost of Expenses
               </Typography>
-
-              <Typography
-                level="title-md"
-                sx={{
-                  textAlign: "start",
-                  mt: 3,
-                  mb: 3,
-                }}
-              >
-
-              </Typography>
+              <Box sx={{my:3}}>
+                {expenseList && expenseList.map(expense => (
+                  <Box display={{
+                    display: "flex",
+                    justifyContent: "space-between"
+                  }}>
+                    <Typography sx={{
+                      fontSize: { xs: 20, sm: 20, md: 25 }
+                    }}
+                    >
+                      {startCase(expense.expenseName)}
+                    </Typography>
+                    <Typography key={expense.id}>
+                      {USDollar.format(expense.expenseAmount)}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
               <form onSubmit={handleSubmit}>
                 <Box sx={{ display: { xs: "block", md: "flex" }, justifyContent: "center", gap: { md: 2 } }}>
                   <FormControl required sx={{ flexGrow: 1, }} size="lg">
@@ -213,7 +201,7 @@ function OneExpense() {
                     size="lg"
                     placeholder="Select Buddy"
                     indicator={<KeyboardArrowDown />}
-                    onChange={(e, newValue) => {setBuddySelector(newValue)}}
+                    onChange={(e, newValue) => { setBuddySelector(newValue) }}
                     sx={{
                       width: { xs: "auto", sm: 570, lg: 790 },
                       [`& .${selectClasses.indicator}`]: {
